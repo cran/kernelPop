@@ -486,7 +486,7 @@ void Landscape_space::ChooseEpoch()
 void Landscape_space::RandomlyChooseEpoch()
  {
    int i;
-   double p[nep];
+   double *p = new double[nep];
    if (randepoch>0)
     {
       for (i=0;i<nep;i++)
@@ -495,6 +495,7 @@ void Landscape_space::RandomlyChooseEpoch()
 	}
       e = RandLibObj.multinomial(p,nep);
     }
+   delete [] p;
 }
 
 void Landscape_space::SequentiallyConstructDemoMatrix()
@@ -528,7 +529,7 @@ void Landscape_space::SequentiallyConstructDemoMatrix()
 void Landscape_space::RandomlyConstructDemoMatrix()
 {
 
-  double p[ndemo];
+  double *p = new double[ndemo];
   int fr,to;
   int i,rm;
   int newto,newfr;
@@ -554,6 +555,7 @@ void Landscape_space::RandomlyConstructDemoMatrix()
 	    }
 	}
     }
+  delete [] p;
 }
 
 void Landscape_space::popsizeset(std::vector<int> &ps)
@@ -742,12 +744,15 @@ vector< PackedIndividual_space >  Landscape_space::CalculateMaleGameteClassVecto
 	}
     }
 
-  double p[sz];
+  //  double p[sz];
+  double *p = new double[sz+1]; //the sz+1 is for cases when there are no males. The gnu-specific 
+  //contruction above dows not bomb when this happens, but the standard C++ method of declaring
+  //a dynamic vector does.
   males.reserve(sz);
   lmales.reserve(sz);
   sz=0;
   tot=0;
-
+  
   ///cout << ".";
 
   for (i=0;i<dclass;i++)
@@ -761,7 +766,7 @@ vector< PackedIndividual_space >  Landscape_space::CalculateMaleGameteClassVecto
 	      //	      if (Habitat(i)==Habitat(pi.GetClass())) ///male is in same habitat as female, base prob on distance
 	      //		{
 		  dist = pow(pow((pi.GetX()-(males[j]).GetX()),2)+pow((pi.GetY()-(males[j]).GetY()),2),0.5);
-		  if (dist>0)
+		  if (dist>0 && dist<6000)
 		    {
 		      pkd = pollenKernelDensity(dist,i);
 		    } 
@@ -771,17 +776,8 @@ vector< PackedIndividual_space >  Landscape_space::CalculateMaleGameteClassVecto
 		    }
 		  if (pkd<mindens)  pkd=0.0;
 		  p[sz]=M[e].Value() * pkd;
-		  //		}
-		  //	      else
-		  //		{
-		  //		  p[sz]= M[e].Value() ;
-		  //		}
-
-	      //	      cerr <<"j: "<<j<<"p[sz] "<<p[sz]<<" males[j] "<<males[j];
-	      tot = tot + p[sz];
-
-	      sz++;
-
+		  tot = tot + p[sz];
+		  sz++;
 	    }
 	  //	  cerr << endl;
 	  for (size_t r1=0; r1 < males.size(); r1++)
@@ -812,6 +808,7 @@ vector< PackedIndividual_space >  Landscape_space::CalculateMaleGameteClassVecto
       lmales.resize(0);
     }
   //  cerr << "number of males returned from gamete vector routine "<<lmales.size()<<endl;
+  delete [] p;
   return lmales;
 }
 
@@ -945,6 +942,7 @@ void Landscape_space::Reproduce()
 
   for (k=0;k<sz;k++)
     {
+      //cerr <<"checkpoint in reproduce"<<endl;
       if (R[e].AnyFrom(k)) ///find out if offspring can be produced by this class
 	{
 	  R[e].SetFromState(k);
@@ -1019,7 +1017,8 @@ PAckedIndividual.h
 	      for (j=0;j<sz;j++)
 		{
 		  R[e].SetToState(j);
-		  ///pick a number of offspring from a Poisson dist with mean=R[tostate,fromstate]
+		  ///pick a number of offspring from a 
+		  ///Poisson dist with mean=R[tostate,fromstate]
 
 		  if (males.size()==0)
 		    {
@@ -1101,6 +1100,176 @@ ability to produce pollen could be inserted.
 				    {
 				      int mn = RandLibObj.PickMultinomial();
 				      //				      cerr <<"mn "<<mn<<endl;
+				      mate = males[mn];
+				    }
+				}
+
+			      ///"do the deed" between searchI and mate. tmpI is the baby.  This is where the
+			      ///Mendelian genetics plus mutation takes place
+			      //			      cerr << "mother "<<searchI;
+			      //			      cerr <<"mate "<<mate <<endl;
+			      tmpI = searchI.repro_sex(searchI,mate,t,Atbls);
+			      ///this could/should be made user selectable
+			      bsecls = j - (Habitat(j) * s) ; 
+			      tmpI.SetClass((bsecls + (getpopulation(tmpx,tmpy) * s)));
+
+			      tmpI.SetSex(0) ;
+			      tmpI.SetGen(t) ;
+			      tmpI.Change(-1);
+			      //			      cerr<<"about to birth...";
+
+			      tmpI.Birth(t,Atbls) ;
+
+			      //			      cerr<<"birthed"<<endl;
+			      //  cerr << "Seed mu "<<seed_mu<<endl;
+			      tmpI.SetX(tmpx);
+			      tmpI.SetY(tmpy);
+			      ///keep track of mother's location
+			      tmpI.SetMX(searchI.GetX());
+			      tmpI.SetMY(searchI.GetY());
+			      ///keep track of father's location
+			      tmpI.SetFX(mate.GetX());
+			      tmpI.SetFY(mate.GetY());
+			      err = 0;			      
+			      if (I[tmpI.GetClass()].AddIndividual(tmpI)<0)
+				{
+				  cerr << "adding an individual failed" << endl;
+				}
+			      
+			    }
+			} //q
+		    }//end if noff>0
+		} //j
+	      RandLibObj.FreeDiscreteLookup();
+	      I[k].NextIndividual();
+	    }//l
+	} //if R[e].AnyFrom
+    }//k 
+
+}//end of function Reproduce
+
+
+
+void Landscape_space::Reproduce_approx()
+{
+  PackedIndividual_space tmpI, mate, searchI;
+  vector < double > pvec;
+  vector < PackedIndividual_space > males ;
+  //  vector < PackedIndividual_space >::iterator ti ;
+  double tmpx, tmpy;
+  int err, indx;
+  int q,noff ;
+  int bsecls ;
+  size_t j, k, l, sz, lsz ;
+  sz = nhab * s;
+
+  for (k=0;k<sz;k++)
+    {
+      //cerr <<"checkpoint in reproduce"<<endl;
+      if (R[e].AnyFrom(k)) ///find out if offspring can be produced by this class
+	{
+	  R[e].SetFromState(k);
+	  I[k].CompressClass(0.5);///save space (may help speed )
+	  I[k].ResetIndividuals();///set an internal pointer to I[k] first ind in list
+	  lsz=I[k].size();
+	  for (l=0;l<lsz;l++)///'l' is an index for the reproductive individuals in class 'k'
+	    {
+	      searchI = I[k].GetCurrentIndividual();
+	      if (searchI.GetClass()<0)
+		{
+		  ///this should not happen because of the calculation of lsz a few lines above
+		  cerr << "no individual returned from deomgraphic class"<<endl;
+		  assert(searchI.GetClass()==0);
+		}
+	      indx = I[k].GetCurrentIndex(); ///line not needed (AES thinks 10/12/08)
+	      ///males.clear();
+	      ///males = CalculateMaleGameteClassVector(searchI);
+
+	      for (j=0;j<sz;j++)
+		{
+		  R[e].SetToState(j);
+		  ///pick a number of offspring from a 
+		  ///Poisson dist with mean=R[tostate,fromstate]
+
+		  noff = R[e].PoissonOffspring();
+
+		  if (noff>0)
+		    {
+		      I[k].SetCurrentLastRep(t);   ///FIX set after determining if repro occurs
+		      I[k].SetCurrentNumOff(noff); ///FIX set after determining if repro occurs
+/*
+choosing mate.  At this point the effects of genotype or location upon the mates
+ability to produce pollen could be inserted.
+*/
+		      if (!multiple_paternity)///all offspring from one father
+			{
+			  ///find the father:
+			  ///first choose a distance from the female by using male kernels in
+			  /// 'reverse'
+			  ///IMPORTANT: ASSUMES THAT ALL MALE KERNELS ARE THE SAME!!!!
+			  ///IMPORTANT: ASSUMES THAT ALL MALES HAVE EQUAL GAMETE PRODUCTION!!!
+			  if (RandLibObj.uniform()<self)
+			    {
+			      mate = searchI;
+			    }
+			  else
+			    {
+			      ///the lookup table for PickMultinomial is set in the function
+			      ///CalculateMaleGameteVector
+			      
+			      mate = males[RandLibObj.PickMultinomial()];
+			    }
+			}
+		      //cerr<<"abou to generate offspring j " << j <<endl;;
+		      for (q=0;q<noff;q++)
+			{
+
+			  ///decide on the xy coords of the new offspring
+			  //RandLibObj.negexp_xy(searchI.GetX(),searchI.GetY(),seed_mu,tmpx,tmpy);
+			  ///if strictly neutral
+
+			  if (nphen==0)
+			    {
+			      new_propagule_xy(searchI.GetX(),searchI.GetY(),searchI.GetClass(),asp,tmpx,tmpy);
+			    }
+			  else///selection on phenotype of the mother "searchI"
+			    {
+			      if (nphen==1)
+				{
+				  double mult1 = IndividualPhenotype(searchI)[0]/(SELECTIONMAXA*2) ;
+				  RandLibObj.rmixed_xy(searchI.GetX(),searchI.GetY(),
+						      seed_mu,seed_mu2*mult1,seed_shape2,
+						      seed_mix,asp,
+						      tmpx,tmpy);
+				}
+			      else if (nphen==2)
+				{
+				  double mult1 = 1+(0.5 - IndividualPhenotype(searchI)[0]/(SELECTIONMAXA*2)) ;
+				  if (mult1<0) {mult1=0;}
+				  double mult2  = 1+(0.5-IndividualPhenotype(searchI)[1]/(SELECTIONMAXA*2)) * seed_mix;
+				  if (mult2<0) {mult2=0;}
+				  double nmix = mult2*seed_mix;
+				  if (nmix>1){nmix=1;}
+				  RandLibObj.rmixed_xy(searchI.GetX(),searchI.GetY(),
+						      seed_mu,seed_mu2*mult1,seed_shape2,nmix,asp,
+						      tmpx,tmpy);
+				  //cerr<<"determined phenotype mult "<<mult1<<" mult2 "<<mult2<<endl;
+				}
+			    }
+			  ///This is the place where suitable habitat is determined.  
+			  ///
+			  if (getpopulation(tmpx,tmpy)>=0)
+			    {
+			      if (multiple_paternity)///each offspring the product of mixed mating
+				{
+				  if (RandLibObj.uniform()<self)
+				    {
+				      mate = searchI;
+				    }
+				  else
+				    {
+				      int mn = RandLibObj.PickMultinomial();
+				      //cerr <<"mn "<<mn<<endl;
 				      mate = males[mn];
 				    }
 				}
@@ -1779,6 +1948,49 @@ void Landscape_space::new_propagule_xy(double ix, double iy, int cls, double asp
 				 SK[e][cls][2],SK[e][cls][4],
 				 SK[e][cls][5],SK[e][cls][5],aspect,x,y);
     }
+}
+
+int Landscape_space::male_gamete_source_habitat(double ix, double iy,  double aspect, int numtries)
+{
+  ///note that the compared to new_propagule_xy, there is no 'cls' parameter
+  ///This function assumes that the first row in the PK matrix works for all rows.  This is equivalent of assuming a
+  ///single pollen kernel for all males in the landscape
+
+  int cls=0; ///if ever changing to a variable pollen density, this will need to be variable
+  int pop;
+  double x,y;
+  do
+    {
+      switch (int(PK[e][cls][0]))
+	{
+	case 1: //exponential (weibull with shape set at 1)
+	  RandLibObj.rweibull_xy(ix,iy,PK[e][cls][1],1,aspect,x,y);
+	  //      cerr <<"exp"<<endl;
+	  break;
+	case 2: //weibull
+	  RandLibObj.rweibull_xy(ix,iy,PK[e][cls][1],PK[e][cls][2],aspect,x,y);
+	  //      cerr <<"weib"<<endl;
+	  break;
+	  ///    case 3: //Clarks formulation of geometric
+	  ///      RandLibObj.rgeom_xy(ix,iy,PK[e][cls][1],PK[e][cls][2],aspect,x,y);
+	  ///      cerr <<"geom"<<endl;
+	  ///      break;
+	case 3: //mixture distribution
+	  //      cerr <<"mixed"<<endl;
+	  //      cerr << "seedkernel params, class: "<<cls<<" kernel row: "<<PK[e][cls][0]<<", "<<PK[e][cls][1]<<", "<<PK[e][cls][2]<<", "<<PK[e][cls][3]<<", "<<PK[e][cls][4]<<", "<<PK[e][cls][5]<<endl;
+	  RandLibObj.rassym_mixed_xy(ix,iy,
+				     PK[e][cls][1],PK[e][cls][3],
+				     PK[e][cls][1],PK[e][cls][3],
+				     PK[e][cls][2],PK[e][cls][4],
+				     PK[e][cls][2],PK[e][cls][4],
+				     PK[e][cls][5],PK[e][cls][5],aspect,x,y);
+	}    
+      ///test if there is habitat at x and y.  If there is, check if there are males in that habitat
+      ///if there is not, then pull another male gamete (pollen grain)
+      pop=getpopulation(x,y);
+    }
+  while (pop<0);
+  return(pop);
 }
 
 double Landscape_space::pollenKernelDensity(double dist, int i)

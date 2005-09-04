@@ -700,6 +700,11 @@ void testfindmate(PackedIndividual_space pi);
 
 void Reproduce();
 
+  /**
+     same as reproduce, but uses a different approach to movement of male gametes. This is _not_ the algorithm defined in the kernelPop paper in Molecular Ecology Res.
+  **/
+void Reproduce_approx();
+
 
   /** 
 
@@ -751,6 +756,11 @@ void Advance();
   based on the internal seed kernel matrix
   */
   void new_propagule_xy(double ix, double iy, int cls, double aspect, double &x, double &y);
+  /**
+This function takes a mothers location and finds the habitat that her
+pollen cloud comes from.  Used for approximate male reproduction
+   */
+  int male_gamete_source_habitat(double ix, double iy, double aspect, int numtries=100);
   double pollenKernelDensity(double dist, int i);
 
 

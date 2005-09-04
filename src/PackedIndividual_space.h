@@ -68,7 +68,7 @@ protected:
 public:
   PackedIndividual_space(int c=0, int sx=0, int g=0, int nl=0);
   ~PackedIndividual_space();
-
+  ///class stands for demographic class (across the entire landscape of habitats)
   ///randomly sets the class of an individual (for certain types of initialization)
   int RandomizeClass(int numclass=1);
 

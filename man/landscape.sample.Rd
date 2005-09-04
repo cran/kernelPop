@@ -11,13 +11,15 @@ statistics calculatiuons
 
 }
 \usage{
-landscape.sample(rland, np = NULL, ns = NULL)
+landscape.sample(rland, np = NULL, ns = NULL, pvec = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{rland}{ landscape object }
   \item{np}{ number populations }
   \item{ns}{ number samples per population }
+  \item{pvec}{a vector of populations to sample.  Should be numbers from
+  1 to number of habitats}
 }
 \value{
 landscape object

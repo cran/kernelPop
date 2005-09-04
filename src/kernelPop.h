@@ -108,7 +108,7 @@ extern "C" SEXP read_landscape(SEXP fn);
 extern "C" SEXP convert_metasim_to_R(Landscape_space_statistics &L);
 extern "C" SEXP write_landscape(SEXP fn, SEXP Rland);
 extern "C" void convert_R_to_metasim(SEXP Rland, Landscape_space_statistics &L);
-extern "C" SEXP getListElement(SEXP list, char *str);
+extern "C" SEXP getListElement(SEXP list, const char *str);
 
 ///simulations
 ///run metasim on the landscape a certain number of times

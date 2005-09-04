@@ -15,7 +15,7 @@ extern "C" {
   /* get the list element named str, or return NULL */
   /*This code comes from the R-exts documentation */
  
-  SEXP getListElement(SEXP list, char *str)
+  SEXP getListElement(SEXP list, const char *str)
   {
     SEXP elmt = R_NilValue, names = getAttrib(list, R_NamesSymbol);
     int i;
@@ -52,8 +52,10 @@ extern "C" {
 
   void R_to_metasim_float(SEXP inlist, Landscape_space_statistics &L)
   {
-    L.setself((asReal(getListElement(inlist,SELFRATENAME))));
-
+    double s;
+    s = asReal(getListElement(inlist,SELFRATENAME));
+    L.setself(s);
+    ///    Rprintf("selfrate: %g \n",s);
     L.setseed_mu((asReal(getListElement(inlist,SEEDMUNAME))),(asReal(getListElement(inlist,SEEDMU2NAME))),0,0);
     L.setseed_shape((asReal(getListElement(inlist,SEEDSHAPENAME))),(asReal(getListElement(inlist,SEEDSHAPE2NAME))),0,0);
     L.setseed_mix((asReal(getListElement(inlist,SEEDMIXNAME))),0);
@@ -212,7 +214,7 @@ void R_to_metasim_loci(SEXP inlist, Landscape_space_statistics& L)
   {
     ///Loci:  Go through R locus object and convert to Atbls
     
-    char *ststr;
+    const char *ststr;
     ststr = NULL;
     int andx,i=0,j=0,sl=0;
     int nloc = length(inlist);///number of loci
@@ -651,7 +653,7 @@ read in landscapes
 	
 	///Vital Vectors:  extinctions
 	SEXP Evec = PROTECT(allocVector(REALSXP, L.gethabs()));
-	double ev[L.gethabs()];
+	double *ev = new double[L.gethabs()];
 	L.getextinct(e,ev);
 	for (i=0;i<L.gethabs();i++)
 	  {
@@ -661,7 +663,7 @@ read in landscapes
 	
 	///Vital Vectors:  carry
 	SEXP Kvec = PROTECT(allocVector(REALSXP, L.gethabs()));
-	int cv[L.gethabs()];
+	int *cv = new int[L.gethabs()];
 	L.getk(e,cv);
 	for (i=0;i<L.gethabs();i++)
 	  {
@@ -673,7 +675,7 @@ read in landscapes
 	///demography in a habitat.  This vector is the length of the
 	///number of local demographies
 	
-	double dv[L.getndemo()];
+	double *dv = new double[L.getndemo()];
 	SEXP LDvec = PROTECT(allocVector(REALSXP, L.getndemo()));
 	L.getldemovector(e,dv);
 	for (i=0;i<L.getndemo();i++)
@@ -688,7 +690,10 @@ read in landscapes
 	SEXP  rightx = PROTECT(allocVector(REALSXP, L.gethabs()));
 	SEXP  topy   = PROTECT(allocVector(REALSXP, L.gethabs()));
 	SEXP  boty   = PROTECT(allocVector(REALSXP, L.gethabs()));
-	double lx[L.gethabs()], rx[L.gethabs()], tpy[L.gethabs()],bty[L.gethabs()];
+	double *lx = new double[L.gethabs()];
+	double *rx = new double[L.gethabs()];
+	double *tpy= new double[L.gethabs()];
+	double *bty= new double[L.gethabs()];
 	L.getpoploc(e,lx,rx,tpy,bty);
 	for (i=0;i<L.gethabs();i++)
 	  {
@@ -698,6 +703,11 @@ read in landscapes
 	    REAL(boty)[i]   = bty[i];
 	  }
 	
+	delete [] lx;
+	delete [] rx;
+	delete [] tpy;
+	delete [] bty;
+
 #ifdef RDEBUG
 	cerr <<"Finished setting up vectors for epoch: "<<e<<endl;
 #endif
@@ -1023,20 +1033,6 @@ SEXP convert_metasim_to_R(Landscape_space_statistics &L)
 
   n = INTEGER(coerceVector(numit,INTSXP))[0];
   compress = INTEGER(coerceVector(cmpress,INTSXP))[0];
-
-  /*
-  //debug
-  ofstream OSTRM;
-  OSTRM.open("test1.dat");
-  if (!OSTRM)
-    {
-      cerr <<"fn "<<"test1.dat"<<endl;
-      error ("could not open output file name:");
-    }
-  OSTRM << L;
-  OSTRM.close();
-  //end debug
-  */
 
   for (i=0;i<n;i++)
     {
