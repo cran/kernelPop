@@ -1,0 +1,32 @@
+
+#
+# invasion model in a linear habitat with metapopulation extinction
+#
+print(date())
+library(kernelPop)
+source("c-landscape.R")
+source("amova-functions.R")
+source("fdist.R")
+
+years.per.interval <- 25 #number of years before recording data
+intervals <- 4 #multiply years.per.interval to get total length of simulation
+phist <- vector("list",intervals)
+convert.present <- T #is the ImageMagik suite installed (to make gif animations?)
+results <- NULL
+
+for (r in 1:reps)
+  {
+    l <- new.testfdist.landscape()
+    for (i in 1:intervals)
+      {
+        l <- landscape.simulate(l,years.per.interval)
+        save(file="latest-landscape.rda",l)
+      }
+    print(date())
+    results <- c(results,landscape.fdist.analysis(l))
+  }
+
+print("type I error rate")
+print(sum(results>0.975|results<0.025)/length(results))
+
+

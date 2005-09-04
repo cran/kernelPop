@@ -1,0 +1,17 @@
+92d91
+< 	/*
+94,96d92
+< 	*/
+< 	printf("%f\n",fsum/hsum);
+< 
+100c96
+< 	/*	printf("median sample size over all loci and pops is %d\n",smed); */
+---
+> 	printf("median sample size over all loci and pops is %d\n",smed);
+106,107c102
+< 	/*
+<        	printf("type in any character and return to close window  ");
+---
+> 	printf("type in any character and return to close window  ");
+109d103
+< 	*/
