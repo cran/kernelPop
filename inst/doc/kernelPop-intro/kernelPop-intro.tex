@@ -23,10 +23,6 @@
 
 \maketitle
 
-<<load-library,results=hide,echo=F>>=
-library(kernelPop)
-set.seed(123) ###change this if you use this code in production!
-@ 
 
 \section{Introduction}
 \label{sec:introduction}
@@ -117,10 +113,16 @@ Each will:
 \end{itemize}
 
 The first step in creating a landscape object is to create a skeleton landscape
-<<create-skeleton>>=
-land <-  landscape.new.empty()
-names(land)
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> land <- landscape.new.empty()
+> names(land)
+\end{Sinput}
+\begin{Soutput}
+[1] "intparam"    "switchparam" "floatparam"  "demography"  "loci"       
+[6] "expression"  "individuals"
+\end{Soutput}
+\end{Schunk}
 
 \subsection{intparam}
 \label{sec:intparam}
@@ -164,10 +166,19 @@ function\footnote{All code in this document should be available in
   results.  If you set '\code{par(ask=T)}' before '\code{sourcing}',
   the graphs (and subsequent steps!) will wait for you to hit return}.
 
-<<add-intparams>>=
-args(landscape.new.intparam)
-land <- landscape.new.intparam(land,h=4,s=6)
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> args(landscape.new.intparam)
+\end{Sinput}
+\begin{Soutput}
+function (rland, h = 1, s = 1, cg = 0, ce = 0, totgen = 1000, 
+    maxland = 2e+05, np = 0) 
+NULL
+\end{Soutput}
+\begin{Sinput}
+> land <- landscape.new.intparam(land, h = 4, s = 6)
+\end{Sinput}
+\end{Schunk}
 
 Note that this function takes a landscape object (in this case,
 skeleton) as one of its parameters.  It returns the modified
@@ -196,10 +207,20 @@ simulation
 \item [pollenmix] mixture parameter between the two pollen distributions (1=all dist 1, 0=all dist 2)
 \end{description}
 
-<<add-floatparams>>=
-args(landscape.new.floatparam)
-land <- landscape.new.floatparam(land)
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> args(landscape.new.floatparam)
+\end{Sinput}
+\begin{Soutput}
+function (rland, s = 0, seedscale = c(10, 10), seedshape = c(10, 
+    10), seedmix = 1, pollenscale = c(2, 10), pollenshape = c(2, 
+    6), pollenmix = 1, asp = 1, mindens = 1e-25) 
+NULL
+\end{Soutput}
+\begin{Sinput}
+> land <- landscape.new.floatparam(land)
+\end{Sinput}
+\end{Schunk}
 
 \subsection{switchparam}
 \label{sec:switchparams}
@@ -215,10 +236,18 @@ These are boolean parameters that make choices about a landscape
   full-sibs
 \end{description}
 
-<<add-boolean>>=
-args(landscape.new.switchparam)
-land <- landscape.new.switchparam(land)
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> args(landscape.new.switchparam)
+\end{Sinput}
+\begin{Soutput}
+function (rland, re = 0, rd = 0, mp = 1) 
+NULL
+\end{Soutput}
+\begin{Sinput}
+> land <- landscape.new.switchparam(land)
+\end{Sinput}
+\end{Schunk}
 
 \subsection{demography}
 \label{sec:demography}
@@ -258,45 +287,37 @@ demography. Figure
     pollen on average.}
   \label{fig:demogr}
 \end{figure}
-<<setup-local>>=
-S <- matrix(c( 
-              0,    0,  0,     0,    0,  0,
-              0,    0,  0,     0,    0,  0,
-              0.18, 0,  0,     0,    0,  0,
-              0,  0.14,  0,  0.26,    0,  0,
-              0,    0, 0.7,    0, 0.09,  0,
-              0,    0,  0,   0.2,    0,  0.18), byrow=T,nrow=6)
-              
-R <- matrix(c(
-              0,  0,  0,  0,  14,  0,
-              0,  0,  0,  0,  8.5,  0,
-              0,  0,  0,  0,  0,  0,
-              0,  0,  0,  0,  0,  0,
-              0,  0,  0,  0,  0,  0,
-              0,  0,  0,  0,  0,  0), byrow=T,nrow=6)
-              
-M <- matrix(c(
-              0,  0,  0,  0,  0,  0,
-              0,  0,  0,  0,  0,  0,
-              0,  0,  0,  0,  0,  0,
-              0,  0,  0,  0,  0,  0,
-              0,  0,  0,0.25, 0,  0.75,
-              0,  0,  0,  0,  0,  0), byrow=T,nrow=6)
-args(landscape.new.local.demo)
-land <- landscape.new.local.demo(land, S, R, M)
-print ("add a new local demography with different Reproduction")
-
-R2 <- matrix(c(
-              0,  0,  0,  0,  8,  0,
-              0,  0,  0,  0,  5.5,  0,
-              0,  0,  0,  0,  0,  0,
-              0,  0,  0,  0,  0,  0,
-              0,  0,  0,  0,  0,  0,
-              0,  0,  0,  0,  0,  0), byrow=T,nrow=6)
-
-land <- landscape.new.local.demo(land, S, R2, M)
-
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> S <- matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.18, 0, 0, 
++     0, 0, 0, 0, 0.14, 0, 0.26, 0, 0, 0, 0, 0.7, 0, 0.09, 0, 0, 
++     0, 0, 0.2, 0, 0.18), byrow = T, nrow = 6)
+> R <- matrix(c(0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 8.5, 0, 0, 0, 0, 
++     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
++     0, 0), byrow = T, nrow = 6)
+> M <- matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
++     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.25, 0, 0.75, 0, 0, 0, 
++     0, 0, 0), byrow = T, nrow = 6)
+> args(landscape.new.local.demo)
+\end{Sinput}
+\begin{Soutput}
+function (rland, S, R, M) 
+NULL
+\end{Soutput}
+\begin{Sinput}
+> land <- landscape.new.local.demo(land, S, R, M)
+> print("add a new local demography with different Reproduction")
+\end{Sinput}
+\begin{Soutput}
+[1] "add a new local demography with different Reproduction"
+\end{Soutput}
+\begin{Sinput}
+> R2 <- matrix(c(0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 5.5, 0, 0, 0, 0, 
++     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
++     0, 0), byrow = T, nrow = 6)
+> land <- landscape.new.local.demo(land, S, R2, M)
+\end{Sinput}
+\end{Schunk}
 
 The previous code block installed two local demographies into the localdem list.
 
@@ -330,9 +351,11 @@ For most uses of \KP, these matrices can be set to zero in each cell.
 They still need to be defined, however.  The matrix \code{zeromat}
 will be used for each of the three landscape matrices
 
-<<>>=
-zeromat <- matrix(0,nrow=4*6,ncol=4*6)
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> zeromat <- matrix(0, nrow = 4 * 6, ncol = 4 * 6)
+\end{Sinput}
+\end{Schunk}
 
 \paragraph{Vectors describing habitats within a landscape}
 \label{Probabilities}
@@ -341,18 +364,22 @@ Vectors with length equal to the number of habitats are defined in this sub-elem
 \item[extinction] the yearly rate of extinction of each habitat
 \item[carrying capacity] the largest number of individuals supported in each habitat 
 \end{description}
-<<setup-carry-exinct>>=
-extnct <- c(0.0,0.1,0.0,0.1)
-k <- c(1000,600,600,1000)
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> extnct <- c(0, 0.1, 0, 0.1)
+> k <- c(1000, 600, 600, 1000)
+\end{Sinput}
+\end{Schunk}
 
 Vectors with length equal to the length of the local demography
 describe the probability of picking a local demography from the
 localdem list.  Always defined, but only used if \code{randdemo}
 (section~\ref{sec:switchparams}) is set appropriately.
-<<setup-localdemography>>=
-ldem <- c(0.5,0.5)
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> ldem <- c(0.5, 0.5)
+\end{Sinput}
+\end{Schunk}
 
 \paragraph{Seed dispersal kernel matrix}
 This is a matrix that has (number of habitats)*(number of stages) rows
@@ -371,16 +398,45 @@ The rows correspond to stages in the landscape.  The columns correspond to (in o
   determined solely by kernel 1.  If 0, dispersal is determined solely
   by kernel 2.  Intermediate values represent a mixture.
 \end{enumerate}
-<<seedkernel>>=
-sk <- matrix(0,nrow=4*6,ncol=6)
-sk[,1] <- rep(3,4*6)
-sk[,2] <- rep(10,4*6)
-sk[,3] <- rep(1.1,4*6)
-sk[,4] <- rep(100,4*6)
-sk[,5] <- rep(50,4*6)
-sk[,6] <- rep(0.5,4*6)
-sk
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> sk <- matrix(0, nrow = 4 * 6, ncol = 6)
+> sk[, 1] <- rep(3, 4 * 6)
+> sk[, 2] <- rep(10, 4 * 6)
+> sk[, 3] <- rep(1.1, 4 * 6)
+> sk[, 4] <- rep(100, 4 * 6)
+> sk[, 5] <- rep(50, 4 * 6)
+> sk[, 6] <- rep(0.5, 4 * 6)
+> sk
+\end{Sinput}
+\begin{Soutput}
+      [,1] [,2] [,3] [,4] [,5] [,6]
+ [1,]    3   10  1.1  100   50  0.5
+ [2,]    3   10  1.1  100   50  0.5
+ [3,]    3   10  1.1  100   50  0.5
+ [4,]    3   10  1.1  100   50  0.5
+ [5,]    3   10  1.1  100   50  0.5
+ [6,]    3   10  1.1  100   50  0.5
+ [7,]    3   10  1.1  100   50  0.5
+ [8,]    3   10  1.1  100   50  0.5
+ [9,]    3   10  1.1  100   50  0.5
+[10,]    3   10  1.1  100   50  0.5
+[11,]    3   10  1.1  100   50  0.5
+[12,]    3   10  1.1  100   50  0.5
+[13,]    3   10  1.1  100   50  0.5
+[14,]    3   10  1.1  100   50  0.5
+[15,]    3   10  1.1  100   50  0.5
+[16,]    3   10  1.1  100   50  0.5
+[17,]    3   10  1.1  100   50  0.5
+[18,]    3   10  1.1  100   50  0.5
+[19,]    3   10  1.1  100   50  0.5
+[20,]    3   10  1.1  100   50  0.5
+[21,]    3   10  1.1  100   50  0.5
+[22,]    3   10  1.1  100   50  0.5
+[23,]    3   10  1.1  100   50  0.5
+[24,]    3   10  1.1  100   50  0.5
+\end{Soutput}
+\end{Schunk}
 
 \paragraph{Pollen dispersal kernel matrix}
 This is a matrix that has (number of habitats)*(number of stages) rows
@@ -399,16 +455,45 @@ The rows correspond to stages in the landscape.  The columns correspond to (in o
   determined solely by kernel 1.  If 0, dispersal is determined solely
   by kernel 2.  Intermediate values represent a mixture.
 \end{enumerate}
-<<pollenkernel>>=
-pk <- matrix(0,nrow=4*6,ncol=6)
-pk[,1] <- rep(3,4*6)
-pk[,2] <- rep(5,4*6)
-pk[,3] <- rep(2,4*6)
-pk[,4] <- rep(100,4*6)
-pk[,5] <- rep(50,4*6)
-pk[,6] <- rep(1,4*6)
-pk
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> pk <- matrix(0, nrow = 4 * 6, ncol = 6)
+> pk[, 1] <- rep(3, 4 * 6)
+> pk[, 2] <- rep(5, 4 * 6)
+> pk[, 3] <- rep(2, 4 * 6)
+> pk[, 4] <- rep(100, 4 * 6)
+> pk[, 5] <- rep(50, 4 * 6)
+> pk[, 6] <- rep(1, 4 * 6)
+> pk
+\end{Sinput}
+\begin{Soutput}
+      [,1] [,2] [,3] [,4] [,5] [,6]
+ [1,]    3    5    2  100   50    1
+ [2,]    3    5    2  100   50    1
+ [3,]    3    5    2  100   50    1
+ [4,]    3    5    2  100   50    1
+ [5,]    3    5    2  100   50    1
+ [6,]    3    5    2  100   50    1
+ [7,]    3    5    2  100   50    1
+ [8,]    3    5    2  100   50    1
+ [9,]    3    5    2  100   50    1
+[10,]    3    5    2  100   50    1
+[11,]    3    5    2  100   50    1
+[12,]    3    5    2  100   50    1
+[13,]    3    5    2  100   50    1
+[14,]    3    5    2  100   50    1
+[15,]    3    5    2  100   50    1
+[16,]    3    5    2  100   50    1
+[17,]    3    5    2  100   50    1
+[18,]    3    5    2  100   50    1
+[19,]    3    5    2  100   50    1
+[20,]    3    5    2  100   50    1
+[21,]    3    5    2  100   50    1
+[22,]    3    5    2  100   50    1
+[23,]    3    5    2  100   50    1
+[24,]    3    5    2  100   50    1
+\end{Soutput}
+\end{Schunk}
 This pollen kernel specifies a Weibull with shape parameter 2 and
 scale parameter 5.  The mixing parameter is set to 1 so the other
 distribution component values are actually unimportant.
@@ -418,12 +503,14 @@ distribution component values are actually unimportant.
 The habitat locations are encoded as a set of 4 vectors giving the
 left and right x coordinates and  bottom and top y coordinates for each
 habitat.  Here the two habitats are defined as 0,600,0,600 and 800,1400,800,1400
-<<locations>>=
-lx <- c(0,0,800,800)
-rx <- c(600,600,1400,1400)
-bty <- c(0,800,0,800)
-ty <- c(600,1400,600,1400)
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> lx <- c(0, 0, 800, 800)
+> rx <- c(600, 600, 1400, 1400)
+> bty <- c(0, 800, 0, 800)
+> ty <- c(600, 1400, 600, 1400)
+\end{Sinput}
+\end{Schunk}
 
 \paragraph{Put it all in an epoch}
 \label{sec:put-it-all}
@@ -431,13 +518,24 @@ ty <- c(600,1400,600,1400)
 
 The different epoch elements are added to the landscape:
 
-<<make-epoch>>=
-args(landscape.new.epoch)
-land <- landscape.new.epoch(land,S=zeromat,R=zeromat,M=zeromat,
-                            extinct=extnct,carry=k,localprob=ldem,
-                            pollen.kernels=pk,seed.kernels=sk,
-                            leftx=lx,rightx=rx,boty=bty,topy=ty)
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> args(landscape.new.epoch)
+\end{Sinput}
+\begin{Soutput}
+function (rland, S = NULL, R = NULL, M = NULL, epochprob = 1, 
+    startgen = 0, extinct = NULL, carry = NULL, localprob = NULL, 
+    pollen.kernels = NULL, seed.kernels = NULL, leftx = NULL, 
+    rightx = NULL, boty = NULL, topy = NULL, maxland = c(0, 0, 
+        10000, 10000)) 
+NULL
+\end{Soutput}
+\begin{Sinput}
+> land <- landscape.new.epoch(land, S = zeromat, R = zeromat, M = zeromat, 
++     extinct = extnct, carry = k, localprob = ldem, pollen.kernels = pk, 
++     seed.kernels = sk, leftx = lx, rightx = rx, boty = bty, topy = ty)
+\end{Sinput}
+\end{Schunk}
 
 \subsection{Loci}
 \label{sec:loci}
@@ -480,14 +578,28 @@ Here I add three loci:
 \item diploid biparentally inherited finite sequence model (3 alleles, 125 bases)
 \end{enumerate}
 Each will be initialized with 3 alleles.  Sequences are generated at random with base frequencies equal to 0.25 per residue.
-<<make-loci>>=
-args(landscape.new.locus)
-land <- landscape.new.locus(land,type=0,ploidy=1,transmission=1,numalleles=5)
-land <- landscape.new.locus(land,type=1,ploidy=2,transmission=0,numalleles=3)
-land <- landscape.new.locus(land,type=2,ploidy=2,transmission=0,numalleles=3,
-                            allelesize=125)
-length(land$loci)
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> args(landscape.new.locus)
+\end{Sinput}
+\begin{Soutput}
+function (rland, type = 0, ploidy = 1, mutationrate = 0, transmission = 1, 
+    numalleles = 2, allelesize = 50, frequencies = NULL) 
+NULL
+\end{Soutput}
+\begin{Sinput}
+> land <- landscape.new.locus(land, type = 0, ploidy = 1, transmission = 1, 
++     numalleles = 5)
+> land <- landscape.new.locus(land, type = 1, ploidy = 2, transmission = 0, 
++     numalleles = 3)
+> land <- landscape.new.locus(land, type = 2, ploidy = 2, transmission = 0, 
++     numalleles = 3, allelesize = 125)
+> length(land$loci)
+\end{Sinput}
+\begin{Soutput}
+[1] 3
+\end{Soutput}
+\end{Schunk}
 
 \subsection{Individuals}
 \label{sec:individuals}
@@ -503,10 +615,20 @@ are determined by the locus object.  This works out as 1 column for
 every haploid locus and 2 columns for the diploid
 loci. \code{landscape.ploidy(land)} returns the ploidy for each locus
 in order they were appended to the landscape.  Because the number of demographic columns could change the function \code{landscape.democol()} returns the highest number of the deomgraphic columns (currently 9)
-<<demo-some-functions>>=
-landscape.ploidy(land)
-landscape.democol()
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> landscape.ploidy(land)
+\end{Sinput}
+\begin{Soutput}
+[1] 1 2 2
+\end{Soutput}
+\begin{Sinput}
+> landscape.democol()
+\end{Sinput}
+\begin{Soutput}
+[1] 9
+\end{Soutput}
+\end{Schunk}
 
 The function \code{landscape.new.individuals(land)} automatically
 populates a landscape with no individuals.  It allows you to specify
@@ -527,11 +649,13 @@ running at 1.4Ghz with 1Gb RAM.  Reproduction is the slow step, so
 life-cycles that have high over survival and low reproduction run
 faster than low survival- high reproduction life-cycles.
 
-<<add-individuals>>=
-vlen <- land$intparam$habitats*land$intparam$stages
-vec <- rep(100,vlen)
-land <- landscape.new.individuals(land,vec)
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> vlen <- land$intparam$habitats * land$intparam$stages
+> vec <- rep(100, vlen)
+> land <- landscape.new.individuals(land, vec)
+\end{Sinput}
+\end{Schunk}
 
 \section{Operations on landscapes}
 \label{sec:oper-landsc}
@@ -540,26 +664,29 @@ land <- landscape.new.individuals(land,vec)
 \label{sec:simulation}
 To simulate ecology and genetics use \code{landscape.simulate()} 
 
-<<Simulation>>=
-
-l1 <- landscape.simulate(land,10)
-l2 <- landscape.simulate(land,10)
-l3 <- landscape.simulate(land,10)
-l4 <- landscape.simulate(land,10)
-
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> l1 <- landscape.simulate(land, 10)
+> l2 <- landscape.simulate(land, 10)
+> l3 <- landscape.simulate(land, 10)
+> l4 <- landscape.simulate(land, 10)
+\end{Sinput}
+\end{Schunk}
 
 These commands created four replicate simulations of 10 years each,
 starting with the same initial conditions defined above.
 
-<<plot-landscape,fig=T,include=T>>=
-par(mfrow=c(2,2))
-landscape.plot.locations(l1)
-landscape.plot.locations(l2)
-landscape.plot.locations(l3)
-landscape.plot.locations(l4)
-par(mfrow=c(1,1))
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> par(mfrow = c(2, 2))
+> landscape.plot.locations(l1)
+> landscape.plot.locations(l2)
+> landscape.plot.locations(l3)
+> landscape.plot.locations(l4)
+> par(mfrow = c(1, 1))
+\end{Sinput}
+\end{Schunk}
+\includegraphics{kernelPop-intro-plot-landscape}
 
 \subsection{I/O}
 \label{sec:io}
@@ -571,11 +698,13 @@ read into a fresh install of kernelPop and the simulation should proceed
 with the same parameter values as the previous generations (probably a
 different random seed, though).
 
-<<eval=F>>=
-save(file="l1.rda",l1)
-rm(l1)
-load(file="l1.rda",l1)
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> save(file = "l1.rda", l1)
+> rm(l1)
+> load(file = "l1.rda", l1)
+\end{Sinput}
+\end{Schunk}
 
 \subsection{Altering landscapes through time}
 \label{sec:altering-land}
@@ -601,42 +730,83 @@ on a particular allele at a locus, though doing this every generation
 starts to use up some CPU cycles converting R objects to C++ objects. 
 
 This will increase long distance dispersal in this entire landscape at generation 10.
-<<change-extinct>>=
-names(l1$demography$epochs[[1]])
-
-sk <- matrix(0,nrow=4*6,ncol=6)
-sk[,1] <- rep(3,4*6)
-sk[,2] <- rep(10,4*6)
-sk[,3] <- rep(1.1,4*6)
-sk[,4] <- rep(400,4*6)
-sk[,5] <- rep(100,4*6)
-sk[,6] <- rep(0.5,4*6)
-sk
-
-l1$demography$epochs[[1]]$seedkern <- sk
-
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> names(l1$demography$epochs[[1]])
+\end{Sinput}
+\begin{Soutput}
+ [1] "RndChooseProb" "StartGen"      "Extinct"       "Carry"        
+ [5] "Localprob"     "S"             "R"             "M"            
+ [9] "leftx"         "rightx"        "topy"          "boty"         
+[13] "pollenkern"    "seedkern"     
+\end{Soutput}
+\begin{Sinput}
+> sk <- matrix(0, nrow = 4 * 6, ncol = 6)
+> sk[, 1] <- rep(3, 4 * 6)
+> sk[, 2] <- rep(10, 4 * 6)
+> sk[, 3] <- rep(1.1, 4 * 6)
+> sk[, 4] <- rep(400, 4 * 6)
+> sk[, 5] <- rep(100, 4 * 6)
+> sk[, 6] <- rep(0.5, 4 * 6)
+> sk
+\end{Sinput}
+\begin{Soutput}
+      [,1] [,2] [,3] [,4] [,5] [,6]
+ [1,]    3   10  1.1  400  100  0.5
+ [2,]    3   10  1.1  400  100  0.5
+ [3,]    3   10  1.1  400  100  0.5
+ [4,]    3   10  1.1  400  100  0.5
+ [5,]    3   10  1.1  400  100  0.5
+ [6,]    3   10  1.1  400  100  0.5
+ [7,]    3   10  1.1  400  100  0.5
+ [8,]    3   10  1.1  400  100  0.5
+ [9,]    3   10  1.1  400  100  0.5
+[10,]    3   10  1.1  400  100  0.5
+[11,]    3   10  1.1  400  100  0.5
+[12,]    3   10  1.1  400  100  0.5
+[13,]    3   10  1.1  400  100  0.5
+[14,]    3   10  1.1  400  100  0.5
+[15,]    3   10  1.1  400  100  0.5
+[16,]    3   10  1.1  400  100  0.5
+[17,]    3   10  1.1  400  100  0.5
+[18,]    3   10  1.1  400  100  0.5
+[19,]    3   10  1.1  400  100  0.5
+[20,]    3   10  1.1  400  100  0.5
+[21,]    3   10  1.1  400  100  0.5
+[22,]    3   10  1.1  400  100  0.5
+[23,]    3   10  1.1  400  100  0.5
+[24,]    3   10  1.1  400  100  0.5
+\end{Soutput}
+\begin{Sinput}
+> l1$demography$epochs[[1]]$seedkern <- sk
+\end{Sinput}
+\end{Schunk}
 
 Now we can simulate another 10 years, then plot it again.  Note that
 the same object is used as parameter and result for the current state
 before and after simulation.
-<<simulate-again>>=
-l1 <- landscape.simulate(l1,10)
-l2 <- landscape.simulate(l2,10)
-l3 <- landscape.simulate(l3,10)
-l4 <- landscape.simulate(l4,10)
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> l1 <- landscape.simulate(l1, 10)
+> l2 <- landscape.simulate(l2, 10)
+> l3 <- landscape.simulate(l3, 10)
+> l4 <- landscape.simulate(l4, 10)
+\end{Sinput}
+\end{Schunk}
 
 In this plot the changed landscape is on the top left panel. 
 
-<<plot-again,fig=T,include=T>>=
-par(mfrow=c(2,2))
-landscape.plot.locations(l1)
-landscape.plot.locations(l2)
-landscape.plot.locations(l3)
-landscape.plot.locations(l4)
-par(mfrow=c(1,1))
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> par(mfrow = c(2, 2))
+> landscape.plot.locations(l1)
+> landscape.plot.locations(l2)
+> landscape.plot.locations(l3)
+> landscape.plot.locations(l4)
+> par(mfrow = c(1, 1))
+\end{Sinput}
+\end{Schunk}
+\includegraphics{kernelPop-intro-plot-again}
 
 You can see usually see more long-distance seed dispersal events in the top left.
 
@@ -658,36 +828,48 @@ The take advantage of really simple functions distributed with R
 This is the seed-kernel. This includes every dispersal event that gave
 rise to an individual in the landscape used for the parameter.
 
-<<seed-kernel,fig=T,include=T>>=
-source("../test/distance-functions.R")
-par(mfrow=c(2,2))
-hist(seed.dist(l1),breaks=30,xlab="seed dispersal distance")
-hist(seed.dist(l2),breaks=30,xlab="seed dispersal distance")
-hist(seed.dist(l3),breaks=30,xlab="seed dispersal distance")
-hist(seed.dist(l4),breaks=30,xlab="seed dispersal distance")
-par(mfrow=c(1,1))
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> source("../test/distance-functions.R")
+> par(mfrow = c(2, 2))
+> hist(seed.dist(l1), breaks = 30, xlab = "seed dispersal distance")
+> hist(seed.dist(l2), breaks = 30, xlab = "seed dispersal distance")
+> hist(seed.dist(l3), breaks = 30, xlab = "seed dispersal distance")
+> hist(seed.dist(l4), breaks = 30, xlab = "seed dispersal distance")
+> par(mfrow = c(1, 1))
+\end{Sinput}
+\end{Schunk}
+\includegraphics{kernelPop-intro-seed-kernel}
 
 Here is the pollination kernel.  Pollination distance distributions
 are really dependent on the spatial structure of plants.
 
-<<pollen-kernel,fig=T,include=T>>=
-par(mfrow=c(2,2))
-hist(pollination.dist(l1),breaks=30,xlab="pollination dispersal distance")
-hist(pollination.dist(l2),breaks=30,xlab="pollination dispersal distance")
-hist(pollination.dist(l3),breaks=30,xlab="pollination dispersal distance")
-hist(pollination.dist(l4),breaks=30,xlab="pollination dispersal distance")
-par(mfrow=c(1,1))
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> par(mfrow = c(2, 2))
+> hist(pollination.dist(l1), breaks = 30, xlab = "pollination dispersal distance")
+> hist(pollination.dist(l2), breaks = 30, xlab = "pollination dispersal distance")
+> hist(pollination.dist(l3), breaks = 30, xlab = "pollination dispersal distance")
+> hist(pollination.dist(l4), breaks = 30, xlab = "pollination dispersal distance")
+> par(mfrow = c(1, 1))
+\end{Sinput}
+\end{Schunk}
+\includegraphics{kernelPop-intro-pollen-kernel}
 
 \subsection{Populations}
 \label{sec:populations}
 
 The function \code{landscape.populations(land)} returns a vector of
 the population assignments of each individual in the landscape.  This can be useful in selecting individuals from specific populations for further processing as well as measuring population sizes.  For example the population sizes in the landscape l1 just simulated are:
-<<popsize>>=
-table(landscape.populations(l1))
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> table(landscape.populations(l1))
+\end{Sinput}
+\begin{Soutput}
+  1   3   4 
+155 321  15 
+\end{Soutput}
+\end{Schunk}
 
 \subsection{Genetic information}
 \label{sec:genetic-information}
@@ -711,24 +893,55 @@ list called \code{landlist} At generation 50, the mean dispersal
 distance is increased (though the mixture parameter is weighted more
 highly towards local dispersal)
 
-<<simulation3>>=
-gland <- land
-landlist <- vector("list",11)
-landlist[[1]] <- gland
-for(i in 2:11)
-{
-  print(table(landscape.populations(gland)))
-  gland <- landscape.simulate(gland,10)
-  landlist[[i]] <- gland
-  if (i==6)
-    {
-      sk <- gland$demography$epochs[[1]]$seedkern
-      sk[,4] <- rep(500,dim(sk)[1])
-      sk[,6] <- rep(0.8,dim(sk)[1])
-      gland$demography$epochs[[1]]$seedkern <- sk
-    }
-}
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> gland <- land
+> landlist <- vector("list", 11)
+> landlist[[1]] <- gland
+> for (i in 2:11) {
++     print(table(landscape.populations(gland)))
++     gland <- landscape.simulate(gland, 10)
++     landlist[[i]] <- gland
++     if (i == 6) {
++         sk <- gland$demography$epochs[[1]]$seedkern
++         sk[, 4] <- rep(500, dim(sk)[1])
++         sk[, 6] <- rep(0.8, dim(sk)[1])
++         gland$demography$epochs[[1]]$seedkern <- sk
++     }
++ }
+\end{Sinput}
+\begin{Soutput}
+  1   2   3   4 
+600 600 600 600 
+
+  1   3 
+189 596 
+
+  1   3 
+365 598 
+
+  1   3 
+503 598 
+
+  1   3 
+997 597 
+
+  1   3 
+997 598 
+
+  1   2   3   4 
+997  77 597  76 
+
+  1   2   3   4 
+997  78 598 183 
+
+  1   2   3   4 
+997  69 596 147 
+
+  1   2   3   4 
+997 124 597 161 
+\end{Soutput}
+\end{Schunk}
 
 This code chunk takes the list created above, ``collects'' 24
 individuals from each of the extant populations
@@ -737,14 +950,16 @@ each time point and calculates mean $\Phi_{ST}$.  It creates an object
 with two columns: the generation of the simulation and the mean
 $\Phi_{ST}$.  These are then plotted.
 
-<<summary-stat,fig=T,include=T>>=
-plot.ob <- do.call(rbind,lapply(landlist,function(l)
-                                {
-                                  c(l$intparam$currentgen,
-                                    mean(landscape.amova(l,ns=24)))
-                                  }))
-print(xyplot(plot.ob[,2]~plot.ob[,1],type=c("b","smooth"),xlab="Time in years",ylab="Mean Phi-ST"))
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> plot.ob <- do.call(rbind, lapply(landlist, function(l) {
++     c(l$intparam$currentgen, mean(landscape.amova(l, ns = 24)))
++ }))
+> print(xyplot(plot.ob[, 2] ~ plot.ob[, 1], type = c("b", "smooth"), 
++     xlab = "Time in years", ylab = "Mean Phi-ST"))
+\end{Sinput}
+\end{Schunk}
+\includegraphics{kernelPop-intro-summary-stat}
 
 \subsection{Writing files out for other programs to use}
 \label{sec:writing-files-out}
@@ -765,33 +980,43 @@ for improvement for outputting sequences and microsat states.
   as alleles in the output file.  Because allele indices can equal
   zero, and this is the missing data designation in genepop, 1 is
   added to all allele indices in the output file
-<<genepopout>>=
-landscape.genepop.output(gland)
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> landscape.genepop.output(gland)
+\end{Sinput}
+\end{Schunk}
 \item[Arlequin] \code{landscape.write.foreign} can output diploid
   Arlequin files of genotypes.  The allele states are not used.
-<<arlequin-out>>=
-l <- landscape.write.foreign(gland,fn="diploid-arlequin.arb",fmt="arlequin")
-#l <- landscape.write.foreign(gland,fn="haploid-arlequin.arb",fmt="arlequinhap")
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> l <- landscape.write.foreign(gland, fn = "diploid-arlequin.arb", 
++     fmt = "arlequin")
+\end{Sinput}
+\end{Schunk}
 \item[migrate] \code{landscape.write.foreign} can also output files in
   a format that \code{migrate} should be able to read.  This function
   outputs diploid data in the form of genotypes for the genotypic
   version of migrate analyses.  No sequences are output yet.
-<<migrate>>=
-l <- landscape.write.foreign(gland,fn="migrate.infile",fmt="migrate")
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> l <- landscape.write.foreign(gland, fn = "migrate.infile", fmt = "migrate")
+\end{Sinput}
+\end{Schunk}
 \item [Biosys] \code{landsacpe.write.foreign} should also be able to
   output files in biosys format
-<<migrate>>=
-l <- landscape.write.foreign(gland,fn="biosys.txt",fmt="biosys")
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> l <- landscape.write.foreign(gland, fn = "biosys.txt", fmt = "biosys")
+\end{Sinput}
+\end{Schunk}
 \item[fdist] \code{landscape.write.fdist} produces an infile suitable
   for use in the program FDIST.  This is based solely on allele
   frequencies
-<<fdist>>=
-landscape.write.fdist(gland)
-@ 
+\begin{Schunk}
+\begin{Sinput}
+> landscape.write.fdist(gland)
+\end{Sinput}
+\end{Schunk}
 \end{description}
 
 The code snippets above should leave files in the 'inst/doc' directory of your \KP installation.
