@@ -26,7 +26,7 @@ allele indices and state containing the actual allele states.
 \seealso{
   landscape.locus, landscape.locus.states
   }
-
+}
 \examples{
   exampleland <- landscape.new.example()
   exampleland <- landscape.simulate(exampleland, 4)

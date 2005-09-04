@@ -1,2 +1,2 @@
-0.9.09 added const to take care of CHARSXP changes in 2.6
-0.9.07 added documentation comparing kernePop to Rmetasim and EASYPOP
+
+0.9.7 added documentation comparing kernePop to Rmetasim and EASYPOP
