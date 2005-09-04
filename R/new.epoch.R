@@ -123,7 +123,7 @@
     {# a kernel matrix has the same number of rows as a side of the landscape matrix and
       #six columns.  The columns correspond to 1 kernel, 2-3 scale and shape parameters of the kernel
       #4-5 scale and shape parameters for the 2nd distribution in a mixture and 6 mixing parameter (proportion of the first dist)
-      seed.kernels <- cbind(rep(1,matrixsize),rep(rland$floatparam$seedmu,matrixsize),
+      seed.kernels <- cbind(rep(3,matrixsize),rep(rland$floatparam$seedmu,matrixsize),
                             rep(rland$floatparam$seedshape,matrixsize),rep(rland$floatparam$seedmu2,matrixsize),
                             rep(rland$floatparam$seedshape2,matrixsize),rep(rland$floatparam$seedmix,matrixsize))
     }
@@ -136,7 +136,7 @@
     {# a kernel matrix has the same number of rows as a side of the landscape matrix and
       #six columns.  The columns correspond to 1 kernel, 2-3 scale and shape parameters of the kernel
       #4-5 scale and shape parameters for the 2nd distribution in a mixture and 6 mixing parameter (proportion of the first dist)
-      pollen.kernels <- cbind(rep(1,matrixsize),rep(rland$floatparam$pollenmu,matrixsize),rep(rland$floatparam$pollenshape,matrixsize),rep(rland$floatparam$pollenmu2,matrixsize),rep(rland$floatparam$pollenshape2,matrixsize),rep(rland$floatparam$pollenmix,matrixsize))
+      pollen.kernels <- cbind(rep(3,matrixsize),rep(rland$floatparam$pollenmu,matrixsize),rep(rland$floatparam$pollenshape,matrixsize),rep(rland$floatparam$pollenmu2,matrixsize),rep(rland$floatparam$pollenshape2,matrixsize),rep(rland$floatparam$pollenmix,matrixsize))
     }
   
   if ((dim(pollen.kernels)[2]!=6)||(dim(pollen.kernels)[1]!=rland$intparam$habitats*rland$intparam$stages))

@@ -25,3 +25,28 @@ landscape.sample <- function(rland,np=NULL,ns=NULL)
       }
     rland
   }
+
+
+#returns a landscape with a sample of individuals within populations
+#
+#ns should be a vector of sample sizes to take from each population
+#landscape.sample.variable <- function(rland,ns=NULL)
+#  {
+#    if (!is.null(ns))
+#      {
+#        pops <- landscape.populations(rland)
+#        ptbl <- table(pops)
+#        names <- as.numeric(names(which(ptbl>=np)))
+#        rland$individuals <-
+#          rland$individuals[
+#                            as.numeric(unlist(sapply(unique(names),
+#                                                     function(x,pops,ns)
+#                                                     {
+#                                                       ss <- ifelse(length(which(pops==x))>ns[x],
+#                                                                    ns[x],length(which(pops==x)))
+#                                                       sample(which(pops==x),ss,replace=F)
+#                                                     },pops=pops,ns=ns)))
+#                            ,]
+#      }
+#    rland
+#  }

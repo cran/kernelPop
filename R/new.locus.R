@@ -1,5 +1,5 @@
 "landscape.new.locus" <-
-function(rland,type=0,ploidy=1,mutationrate=0,transmission=1,numalleles=2,allelesize=50,frequencies=NULL)
+function(rland,type=0,ploidy=1,mutationrate=0,transmission=1,numalleles=2,allelesize=50,frequencies=NULL,states=NULL)
 {
   if (!(is.list(rland$loci)))
     {
@@ -36,7 +36,7 @@ function(rland,type=0,ploidy=1,mutationrate=0,transmission=1,numalleles=2,allele
 
   if(transmission == 0 || transmission == 1)
     {
-      rland$loci[[locusnum]]$trans <- transmission
+      rland$loci[[locusnum]]$trans <- as.integer(transmission)
     }
   else
     {
@@ -45,7 +45,7 @@ function(rland,type=0,ploidy=1,mutationrate=0,transmission=1,numalleles=2,allele
 
   if(numalleles >= 0)
     {
-      rland$loci[[locusnum]]$alleles <- makealleles(type,numalleles,allelesize,frequencies)
+      rland$loci[[locusnum]]$alleles <- makealleles(type,numalleles,allelesize,frequencies,states)
     }
   else
     {

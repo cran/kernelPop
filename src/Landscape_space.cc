@@ -761,7 +761,14 @@ vector< PackedIndividual_space >  Landscape_space::CalculateMaleGameteClassVecto
 	      //	      if (Habitat(i)==Habitat(pi.GetClass())) ///male is in same habitat as female, base prob on distance
 	      //		{
 		  dist = pow(pow((pi.GetX()-(males[j]).GetX()),2)+pow((pi.GetY()-(males[j]).GetY()),2),0.5);
-		  pkd = pollenKernelDensity(dist,i);
+		  if (dist>0)
+		    {
+		      pkd = pollenKernelDensity(dist,i);
+		    } 
+		  else 
+		    {
+		      pkd=0.0;
+		    }
 		  if (pkd<mindens)  pkd=0.0;
 		  p[sz]=M[e].Value() * pkd;
 		  //		}
@@ -770,12 +777,6 @@ vector< PackedIndividual_space >  Landscape_space::CalculateMaleGameteClassVecto
 		  //		  p[sz]= M[e].Value() ;
 		  //		}
 
-	      /*
-	      if (pi==males[j])///this block prevents selfing,  selfing rate is set separately
-		{
-		  p[sz]=0.0;
-		}
-	      */
 	      //	      cerr <<"j: "<<j<<"p[sz] "<<p[sz]<<" males[j] "<<males[j];
 	      tot = tot + p[sz];
 

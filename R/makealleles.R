@@ -1,5 +1,4 @@
-"makealleles" <-
-function(type,numalleles,allelesize,frequencies)
+makealleles <- function(type,numalleles,allelesize,frequencies,states)
 {
   retval <- 0
 
@@ -15,17 +14,19 @@ function(type,numalleles,allelesize,frequencies)
   
   if(type == 0 || type == 1)
     {
-      statelst <- seq(1,100)
       retval <- vector("list", numalleles)
       for (x in 1:numalleles)
         {
-          retval[[x]]$aindex <- x - 1
-          retval[[x]]$birth <- 0
+          retval[[x]]$aindex <- as.integer(x)
+          retval[[x]]$birth <- as.integer(0)
           retval[[x]]$prop <- frequencies[x]
-          #uses unirange
-          val <- sample(1:length(statelst),1)
-          retval[[x]]$state <- statelst[val]
-          statelst <- statelst[-val]
+          if (is.null(states))
+            {
+              retval[[x]]$state <- as.integer(x)
+            } else
+          {
+            retval[[x]]$state <- as.integer(states[x])
+          }
         }
     }
   else if(type == 2)
@@ -33,12 +34,16 @@ function(type,numalleles,allelesize,frequencies)
       retval <- vector("list", numalleles)
       for (x in 1:numalleles)
         {
-          retval[[x]]$aindex <- x -1
-          retval[[x]]$birth <- 0
+          retval[[x]]$aindex <- as.integer(x)
+          retval[[x]]$birth <- as.integer(0)
           retval[[x]]$prop <- frequencies[x]
-          retval[[x]]$state <- geneseq(allelesize)
+          if (is.null(states))
+            {
+              retval[[x]]$state <- geneseq(allelesize)
+            } else {
+              retval[[x]]$state <- states[x]
+            }
         }
     }
   retval          
 }
-

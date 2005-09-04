@@ -261,6 +261,7 @@ protected:
 
   ///is multiple paternity allowed? 0=single father, 1=every child has a randomly selected father 
   int multiple_paternity ;
+
   /**
     the next several lines define vectors of "vital matrices" each of
     these vectors is nep long.  Therefore each"epoch" can have a

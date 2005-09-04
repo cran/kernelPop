@@ -52,8 +52,10 @@ extern "C" {
 
   void R_to_metasim_float(SEXP inlist, Landscape_space_statistics &L)
   {
-    L.setself((asReal(getListElement(inlist,SELFRATENAME))));
-
+    double s;
+    s = asReal(getListElement(inlist,SELFRATENAME));
+    L.setself(s);
+    ///    Rprintf("selfrate: %g \n",s);
     L.setseed_mu((asReal(getListElement(inlist,SEEDMUNAME))),(asReal(getListElement(inlist,SEEDMU2NAME))),0,0);
     L.setseed_shape((asReal(getListElement(inlist,SEEDSHAPENAME))),(asReal(getListElement(inlist,SEEDSHAPE2NAME))),0,0);
     L.setseed_mix((asReal(getListElement(inlist,SEEDMIXNAME))),0);
@@ -212,7 +214,7 @@ void R_to_metasim_loci(SEXP inlist, Landscape_space_statistics& L)
   {
     ///Loci:  Go through R locus object and convert to Atbls
     
-    char *ststr;
+    const char *ststr;
     ststr = NULL;
     int andx,i=0,j=0,sl=0;
     int nloc = length(inlist);///number of loci
@@ -1023,20 +1025,6 @@ SEXP convert_metasim_to_R(Landscape_space_statistics &L)
 
   n = INTEGER(coerceVector(numit,INTSXP))[0];
   compress = INTEGER(coerceVector(cmpress,INTSXP))[0];
-
-  /*
-  //debug
-  ofstream OSTRM;
-  OSTRM.open("test1.dat");
-  if (!OSTRM)
-    {
-      cerr <<"fn "<<"test1.dat"<<endl;
-      error ("could not open output file name:");
-    }
-  OSTRM << L;
-  OSTRM.close();
-  //end debug
-  */
 
   for (i=0;i<n;i++)
     {

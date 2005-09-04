@@ -14,11 +14,7 @@ landscape.genepop.output(l, fn = "genepop.out", title = "rmetasim landscape outp
   \item{fn}{output file name}
   \item{title}{title of output in genepop file}
 }
-\details{
-Only exports diploid data.  You might want to run \code{landscape.sample()} on the landscape before exporting it}
-}
-\value{
-}
+\details{Only exports diploid data.  You might want to run \code{landscape.sample()} on the landscape before exporting it}
 
 \seealso{ landscape.write.foreign, landscape.write.fdist}
 \examples{
