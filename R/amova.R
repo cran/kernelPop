@@ -18,7 +18,7 @@ landscape.amova.locus <- function(l=1,rland)
     names(df) <- colnames(table(paste(loc[,landscape.democol()+1]),landscape.populations(rland)))
     rownames(df) <-   rownames(as.matrix(table(paste(loc[,landscape.democol()+1]),landscape.populations(rland))))
   }
-  amova(samples=df)
+  ade4::amova(samples=df)
 }
 
 

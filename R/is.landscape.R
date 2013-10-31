@@ -3,31 +3,31 @@
     ok <- TRUE
     if (!is.list(Rland)) {
         if (verb) {
-            print("Landscape not a list")
+            message("Landscape not a list")
         }
         ok <- FALSE
     }
     if (is.null(Rland$intparam)) {
         if (verb) {
-            print("intparam not found.")
+            message("intparam not found.")
         }
         ok <- FALSE
     }
     if (is.null(Rland$switchparam)) {
         if (verb) {
-            print("switchparam not found.")
+            message("switchparam not found.")
         }
         ok <- FALSE
     }
     if (is.null(Rland$floatparam)) {
         if (verb) {
-            print("floatparam not found.")
+            message("floatparam not found.")
         }
         ok <- FALSE
     }
     if (is.null(Rland$demography)) {
         if (verb) {
-            print("demography not found.")
+            message("demography not found.")
         }
         ok <- FALSE
     }
@@ -41,14 +41,14 @@
                 c(Rland$intparam$stages, Rland$intparam$stages)) == 
                 0)) {
                 if (verb) {
-                  print("One or more of the local demography matrices is not of the correct dimensions")
+                  message("One or more of the local demography matrices is not of the correct dimensions")
                 }
                 ok <- FALSE
             }
             if (max(apply(Rland$demography$localdem[[i]]$LocalS, 
                 2, sum)) > 1) {
                 if (verb) {
-                  print(paste("Local survival matrix", i, "has a column that sums to a number greater than one"))
+                  message(paste("Local survival matrix", i, "has a column that sums to a number greater than one"))
                 }
                 ok <- FALSE
             }
@@ -67,7 +67,7 @@
                   Rland$intparam$stages * Rland$intparam$habitats)) == 
                 0)) {
                 if (verb) {
-                  print(paste("One or more of the epoch paramters is of incorrect dimension in epoch", 
+                  message(paste("One or more of the epoch paramters is of incorrect dimension in epoch", 
                     i))
                 }
                 ok <- FALSE
@@ -88,7 +88,7 @@
                     }
                   if (max(apply(tmpS, 2, sum)) > 1) {
                     if (verb) {
-                      print(paste("Columns in the landscape S matrix associated with localdem", 
+                      message(paste("Columns in the landscape S matrix associated with localdem", 
                         j, "total more than 1"))
                     }
                     ok <- FALSE
@@ -99,21 +99,21 @@
     }
     if (is.null(Rland$loci)) {
         if (verb) {
-            print("loci not found.")
+            message("loci not found.")
         }
         ok <- FALSE
     }
     else {
         if (length(Rland$loci) != Rland$intparam$locusnum) {
             if (verb) {
-                print("conflict between size of loci object and size specified in $intparam")
+                message("conflict between size of loci object and size specified in $intparam")
             }
             ok <- FALSE
         }
     }
     if (is.null(Rland$individuals)) {
         if (verb) {
-            print("no individuals section found.")
+            message("no individuals section found.")
         }
         ok <- FALSE
     }
@@ -121,7 +121,7 @@
         noind <- FALSE
         if (!(dim(Rland$individuals)[1] > 0)) {
             if (verb) {
-                print("No individuals in this landscape: spontaneous generation is notallowed")
+                message("No individuals in this landscape: spontaneous generation is notallowed")
             }
             ok <- FALSE
             noind <- TRUE
@@ -130,20 +130,20 @@
             if (max(Rland$individuals[, 1] > ((Rland$intparam$habitats * 
                 Rland$intparam$stages) - 1))) {
                 if (verb) {
-                  print("There are individuals in stages greater than demography allows")
+                  message("There are individuals in stages greater than demography allows")
                 }
                 ok <- FALSE
             }
             if ((!noind) & (dim(Rland$individuals)[2] != (9 + 
                 sum(landscape.ploidy(Rland))))) {
                 if (verb) {
-                  print("The number of loci do not correspond to the number of columns in $individuals\nThis indicates a problem with locus number and/or ploidy")
+                  message("The number of loci do not correspond to the number of columns in $individuals\nThis indicates a problem with locus number and/or ploidy")
                 }
                 ok <- FALSE
             }
             if ((!noind) & (max(Rland$individuals[, 3]) > Rland$intparam$currentgen)) {
                 if (verb) {
-                  print("There are individuals born in the future")
+                  message("There are individuals born in the future")
                 }
                 ok <- FALSE
             }

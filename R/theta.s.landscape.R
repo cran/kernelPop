@@ -20,7 +20,7 @@ function(rland)
                                   )
                   print(segsites)
                   if (segsites>0)
-                    retval[i,j] <- theta.s(segsites,seqlen)[1]
+                    retval[i,j] <- pegas::theta.s(segsites,seqlen)[1]
                 }
             }
       }

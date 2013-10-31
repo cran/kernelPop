@@ -40,7 +40,9 @@ files.
 UTILITY MACROS
  */
 
-///#define RDEBUG
+
+//#define RDEBUG
+
 
 #endif /*METASIM_H*/
 /*

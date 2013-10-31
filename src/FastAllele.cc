@@ -29,7 +29,9 @@ AlleleTbl::~AlleleTbl()
 ///t is the current clock-tick
 int AlleleTbl::mutator(int anum, int t)
 {
+#ifdef DEBUG
   cerr << "AlleleTbl mutator called.  This function should be overridden"<<endl;
+#endif
   assert(1==0);
   return -1;
 }
@@ -245,7 +247,9 @@ int InfAlleleTbl::addAlleleAndIndex(Allele  na, int ai)
 	{
 	  if (ai==(*tmpiter).first)
 	    {
+#ifdef DEBUG
 	      cerr << "Allele index: "<<ai<< " already present in table " <<endl;
+#endif
 	      assert(0==1);
 	    }
 	}
@@ -313,9 +317,11 @@ void InfAlleleTbl::KillAlleleCopy(int i, int t)
     }
   else
     {
+#ifdef DEBUG
       cerr << "allele index : "<<i<<" not found in Allele.h::KillAlleleCopy"<<endl;
       cerr << "This is the allele table: " <<endl;
       Write(cerr);
+#endif
       assert(tmpiter!=A.end());
     }
 
@@ -375,7 +381,9 @@ int InfAlleleTbl::mutator(int anum, int t)
 	}
       else
 	{
+#ifdef DEBUG
 	  cerr <<"Allele number "<<anum<<" not found in allele table: " <<endl<<*this<<endl;
+#endif
 	  assert(tmpiter!=A.end());
 	  return -1;
 	}
@@ -420,12 +428,12 @@ void InfAlleleTbl::Write(ostream &stream)
 
 vector<int>  InfAlleleTbl::getAindices()
 {
-  int sz;
+
 
   vector<int> aindices;
   map<int, Allele, less<int> >::iterator tmpiter;
 
-  sz=A.size();
+  
 
   for (tmpiter=A.begin();tmpiter!=A.end();tmpiter++)
     {
@@ -439,7 +447,7 @@ void InfAlleleTbl::Scan(istream &stream)
   Allele newa;
   int i;
   int ai;
-  int tmp;
+  
   int numa;
 
   double tprop;
@@ -454,7 +462,7 @@ void InfAlleleTbl::Scan(istream &stream)
   for (i=0;i<numa;i++)
     {
       stream >> ai >> newa;
-      tmp=addAlleleAndIndex(newa,ai);
+      //      tmp=addAlleleAndIndex(newa,ai);
       tprop = newa.GetProp() + tprop;
       if (newa.GetState()>maxstate)
 	{
@@ -463,7 +471,9 @@ void InfAlleleTbl::Scan(istream &stream)
     }
   if (tprop != 1.0) //primitive error checking
     {
+#ifdef DEBUG
       cerr << "Proportions of alleles at locus do not total to 1! Instead, they total to: " << tprop << endl;
+#endif
     }
 }		 
 
@@ -557,7 +567,9 @@ int StepAlleleTbl::mutator(int anum, int t)
     }
   else
     {
+#ifdef DEBUG
       cerr <<"Allele number "<<anum<<" not found in allele table: " <<endl<<*this<<endl;
+#endif
       assert(tmpiter!=A.end());
       return -1;
     }

@@ -13,7 +13,7 @@ function(rland)
               {
                 alleledist <- as.factor(landscape.locus(lnum=j,rland.tmp)[,c(-1,-2,-3)])
                 if (length(unique(alleledist))>1)
-                  theta.ewens <- c(theta.k(alleledist),0)
+                  theta.ewens <- c(pegas::theta.k(alleledist),0)
                 else
                   theta.ewens <- c(NA,NA)
                 statevec <- landscape.locus.states(lnum=j,rland.tmp)$state
@@ -23,7 +23,7 @@ function(rland)
                                         #            print(seqlen)
                 segsites <- sum(apply(matrix(unlist(strsplit(statevec,split='')),ncol=seqlen,byrow=T),2,function (x){length(unique(x))})>1)
                 if (segsites>0)
-                  retval[i,j] <- (theta.ewens[1]-theta.s(segsites,seqlen)[1])/sqrt(theta.ewens[2]+theta.s(segsites,seqlen,variance=T)[2])
+                  retval[i,j] <- (theta.ewens[1]-pegas::theta.s(segsites,seqlen)[1])/sqrt(theta.ewens[2]+theta.s(segsites,seqlen,variance=T)[2])
               }
           }
       }

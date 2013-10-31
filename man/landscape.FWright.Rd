@@ -6,10 +6,10 @@
   Calculate F
   }
 \usage{
-  Fmat <- landscape.FWright(rland)
+   landscape.FWright(Rland)
 }
 \arguments{
-  \item{rland}{the Rmetasim landscape object}
+  \item{Rland}{the Rmetasim landscape object}
 }
 \value{
   A matrix of population x locus measures of Wright's F

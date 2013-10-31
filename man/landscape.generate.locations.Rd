@@ -6,7 +6,8 @@
 	makes it easier to define landscapes, if you are just interested in a random landscape with certain qualities  
 }
 \usage{
-landscape.generate.locations(npop = 10, xrange = c(0, 15000), yrange = xrange, sizexkernel = c(300, 80), sizeykernel = sizexkernel, boundaries = NULL)
+landscape.generate.locations(npop = 10, xrange = c(0, 15000),
+yrange = xrange, sizexkernel = c(300, 80), sizeykernel = sizexkernel, boundaries = NULL)
 }
 \arguments{
   \item{npop}{number of habitats to define}

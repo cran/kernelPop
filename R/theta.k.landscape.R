@@ -12,7 +12,7 @@ function(rland)
 #              print(paste(i,j))
               alleledist <- as.factor(landscape.locus(lnum=j,rland.tmp)[,c(-1:-landscape.democol())])
               if (length(unique(alleledist))>1)
-                retval[i,j] <- theta.k(alleledist)
+                retval[i,j] <- pegas::theta.k(alleledist)
               else
                 retval[i,j] <- NA
             }

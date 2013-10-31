@@ -57,7 +57,7 @@ parse.arlequin <- function( file){
 
     fo <- textConnection( dati)
     on.exit( close( fo))
-    data.i <- cbind( pop=i.pop, read.table( fo, header=FALSE, row=NULL)[ ,-(1:2),drop=FALSE])
+    data.i <- cbind( pop=i.pop, read.table( fo, header=FALSE, row.names=NULL)[ ,-(1:2),drop=FALSE])
     close( fo)
     on.exit()
 

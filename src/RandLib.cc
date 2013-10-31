@@ -76,7 +76,9 @@ void RandLib::SetDiscreteLookup(double *p, int ncat) //returns a randomly chosen
 	 {
 	   if (tot > 1.5) ///the total of the vector is really big.  something is wrong.
 	     {
+#ifdef DEBUG
 	       cerr <<"In Randlib.cc, the total of a vector passed to multinomial is much greater than 1:  "<<tot<<endl;
+#endif
 	       assert(tot<1);
 	     }
 	   else //scale all the probs to sum to one
@@ -146,6 +148,32 @@ int RandLib::poisson(double mu)
   return rv;
 }
 
+
+double RandLib::rndweibull(double sc, double sh)
+{
+  return rweibull(sh,sc);
+}
+
+
+double RandLib::rndgeom(double sc, double sh)
+{
+  return pow(2, 1/(1 - sh))*pow((pow(sc, 1 - sh)*uniform()*M_PI)/(-2 + sh), 1/(1 - sh)) - sc;
+}
+
+double RandLib::rndmixed(double mu1, double mu2, double sd1, double sd2, double mix)
+{
+    double mt = uniform();
+    if (mt<mix)
+      {
+	return  rweibull(mu1,sd1);
+      }
+    else
+      {
+	return  rnorm(mu2,sd2);
+      }
+
+}
+
 void RandLib::rnegexp_xy(double ix, double iy, double mu, double aspect, double &newx, double &newy)
 {
   double dir = uniform()* 2 * M_PI;
@@ -157,6 +185,7 @@ void RandLib::rnegexp_xy(double ix, double iy, double mu, double aspect, double 
   newy = (sin(dir)*aspect*dist)*sflag + iy;
   newx = pow(1-pow((sin(dir)*aspect),2),0.5)*dist*cflag + ix;
 }
+
 
 void RandLib::rweibull_xy(double ix, double iy, double sc, double sh, double aspect, double &newx, double &newy)
 {

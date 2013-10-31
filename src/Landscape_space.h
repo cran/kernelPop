@@ -180,6 +180,13 @@ protected:
   /// Individuals
   vector< DemoClass_space > I;
 
+  ///the following vector is a list of males that can function as fathers
+  ///during the execution of Landscape_space::Reproduce()
+  ///it saves recalculating the vector over and over for 
+  ///each mother
+  vector < PackedIndividual_space > valid_males;  
+
+
   ///Lookup table of alleles at all loci
   AlleleLookTbl Atbls;
   /// number of potentially suitable habitats in the landscape.
@@ -618,7 +625,9 @@ void popsizeset(std::vector<int> & ps);
       }
     else 
       {
+#ifdef DEBUG
 	cerr <<"dont know what type of locus this is"<<endl;
+#endif
 	assert(1==0);
       }
   }
@@ -669,6 +678,22 @@ void Survive();
 
 */
 vector < PackedIndividual_space > CalculateMaleGameteClassVector(PackedIndividual_space pi);
+
+/** 
+
+This function approximates the solution implemented in
+CalculateMaleGameteClassVector by making a list of offspring and keeping it up to 
+date pull from a pollen dispersal kernel.
+
+
+    ***Important: this function allocates a lookup table.  it must be
+    ***freed at some point after the function is invoked by issuing the
+    ***command: RandLibObj.FreeDiscreteLookup();
+
+*/
+vector < PackedIndividual_space > CalculateMaleGameteClassVectorApproxDist(PackedIndividual_space pi);
+
+
 
 
   /**
@@ -730,6 +755,17 @@ void CarryState(size_t maxsz, int i);
 
    */
 void HabCarry(int k = -1);
+
+ /**
+
+     set habitat sizes down to carrying capacity by only removing individuals from the
+     smallest category in each habitat
+
+   */
+void HabCarry_stg0(int k = -1);
+
+
+
   /**
 
      set overall landscape size down to "maxlandsz" carrying capacity
@@ -762,6 +798,12 @@ pollen cloud comes from.  Used for approximate male reproduction
    */
   int male_gamete_source_habitat(double ix, double iy, double aspect, int numtries=100);
   double pollenKernelDensity(double dist, int i);
+
+  //this function returns a distance based on the pollen kernel in place
+  //this is used in the pollen approx functions and assumes that there 
+  //is only one pollen kernel density (no difference among stages)
+  double RandpollenKernelDensity();
+
 
 
 

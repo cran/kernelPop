@@ -10,7 +10,7 @@
   ## S, R, and M matricies must be square matricies of size X by X
   ##   where X = rland$intparam$stages*rland$intparam$habitats
 
-rland <- landscape.new.epoch(rland,S=NULL,R=NULL,M=NULL,epochprob=1,
+ landscape.new.epoch(rland,S=NULL,R=NULL,M=NULL,epochprob=1,
                                startgen=0,extinct=NULL,carry=NULL,localprob=NULL,
                                pollen.kernels = NULL, seed.kernels = NULL, 
                                leftx = NULL, rightx = NULL,
@@ -77,7 +77,8 @@ rland <- landscape.new.epoch(rland,S=NULL,R=NULL,M=NULL,epochprob=1,
     across demographic stages, it is much easier to specify it when
     calling \code{landscape.new.floatparam()}}
 
-    \item{seed.kernels}{A similar matrix to \code{pollen.kernels}}
+  \item{seed.kernels}{A similar matrix to \code{pollen.kernels}}
+  \item{maxland}{maximum extent of the landscape}
 }
 
   \examples{

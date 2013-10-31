@@ -10,7 +10,7 @@ function()
   rland <- landscape.new.floatparam(rland,s=0,seedscale=c(90,600),
                                     seedshape=c(1,200),seedmix=c(0.9),
                                     pollenscale=c(50,50),pollenshape=c(1,1),
-                                    pollenmix=1,    asp=0.1)
+                                    pollenmix=1 )
 
 
   S <- matrix(c(
@@ -46,7 +46,7 @@ function()
                      maxland=c(min(locs[1]),min(locs[2]),max(locs[3]),max(locs[4])))
   
   rland <- landscape.new.locus(rland,type=0,ploidy=1,mutationrate=0.005,numalleles=3,
-                     frequencies=c(.2,.2,.6))
+                     frequencies=c(.2,.2,.6),transmission=1)
 
   rland <- landscape.new.locus(rland,type=1,ploidy=2,mutationrate=0.001,transmission=0,numalleles=5)
   rland <- landscape.new.locus(rland,type=1,ploidy=2,mutationrate=0.001,transmission=0,numalleles=5)
@@ -59,10 +59,10 @@ function()
 
   expmat <- cbind(c(0,0.3,0.3,0.4,0,0,0),c(0,0.7,0.25,0.05,0,0,0))
   hsq <- c(0.9,0.9)
-
   rland <- landscape.new.expression(rland,expmat=expmat,hsq=hsq)
+
   initpopsize <- 150
-  rland <- landscape.new.individuals(rland,runif(2*rland$intparam$habitat,min=0,max=initpopsize/1.5))
+  rland <- landscape.new.individuals(rland,round(runif(2*rland$intparam$habitat,min=0,max=initpopsize/1.5)))
   rland
 }
 

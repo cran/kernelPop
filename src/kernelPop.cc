@@ -421,7 +421,9 @@ SEXP write_landscape(SEXP fn, SEXP Rland)
     OSTRM.open(CHARACTER_VALUE(fn));
     if (!OSTRM)
       {
+#ifdef DEBUG
 	cerr <<"fn "<<CHARACTER_VALUE(fn)<<endl;
+#endif
 	error ("could not open output file name:");
 	return ScalarInteger(1);
       }
@@ -659,6 +661,8 @@ read in landscapes
 	  {
 	    REAL(Evec)[i] = ev[i];
 	  }
+	delete [] ev;
+
 	SET_VECTOR_ELT(Demov,2,Evec);
 	
 	///Vital Vectors:  carry
@@ -670,7 +674,8 @@ read in landscapes
 	    REAL(Kvec)[i] = cv[i];
 	  }
 	SET_VECTOR_ELT(Demov,3,Kvec);
-	
+	delete [] cv;
+
 	///Vital Vectors: probability of observing a particular local
 	///demography in a habitat.  This vector is the length of the
 	///number of local demographies
@@ -683,17 +688,21 @@ read in landscapes
 	    REAL(LDvec)[i] = dv[i];
 	  }
 	SET_VECTOR_ELT(Demov,4,LDvec);
-	
+	delete [] dv;
+
 	///Vital Vectors: population spatial coordinates
 	///
 	SEXP  leftx  = PROTECT(allocVector(REALSXP, L.gethabs()));
 	SEXP  rightx = PROTECT(allocVector(REALSXP, L.gethabs()));
 	SEXP  topy   = PROTECT(allocVector(REALSXP, L.gethabs()));
 	SEXP  boty   = PROTECT(allocVector(REALSXP, L.gethabs()));
+
+	
 	double *lx = new double[L.gethabs()];
 	double *rx = new double[L.gethabs()];
-	double *tpy= new double[L.gethabs()];
-	double *bty= new double[L.gethabs()];
+	double *tpy = new double[L.gethabs()];
+	double *bty = new double[L.gethabs()];
+
 	L.getpoploc(e,lx,rx,tpy,bty);
 	for (i=0;i<L.gethabs();i++)
 	  {
@@ -997,7 +1006,9 @@ SEXP convert_metasim_to_R(Landscape_space_statistics &L)
     ISTRM.open(CHARACTER_VALUE(fn));
     if (!ISTRM)
       {
+#ifdef DEBUG
 	cerr <<"fn "<<CHARACTER_VALUE(fn)<<endl;
+#endif
 	error ("could not open input file name:");
       }
 #ifdef RDEBUG
@@ -1069,6 +1080,60 @@ SEXP convert_metasim_to_R(Landscape_space_statistics &L)
 
   return convert_metasim_to_R(L);
 }
+
+///Random number generation depends upon seed and RNG generator defined in the
+  ///calling R enviroment
+  SEXP iterate_landscape_stg0(SEXP numit, SEXP Rland, SEXP cmpress)
+  {
+    Landscape_space_statistics L;
+    int n,i=0;
+    int compress;
+    
+    convert_R_to_metasim(Rland,L);
+    
+    L.ChooseEpoch();
+    L.ConstructDemoMatrix();
+    
+    n = INTEGER(coerceVector(numit,INTSXP))[0];
+    compress = INTEGER(coerceVector(cmpress,INTSXP))[0];
+    
+    for (i=0;i<n;i++)
+      {
+	if ((L.getgens()>L.getCgen())&&(L.PopSize()!=0))
+	  {
+	    L.Extirpate();
+	    L.Survive();
+	    //	    L.HabCarry();
+	    L.HabCarry_stg0();
+	    L.LandCarry();
+
+	    L.Reproduce();
+	    L.Advance();
+	  }
+      }
+    
+    if (compress)
+      {
+	L.Survive();
+      }
+    L.LandCarry();
+    L.HabCarry();
+    
+    /*
+  //debug
+  OSTRM.open("test6.dat");
+  if (!OSTRM)
+  {
+  cerr <<"fn "<<"test.dat"<<endl;
+  error ("could not open output file name:");
+  }
+  OSTRM << L;
+  OSTRM.close();
+  //end debug
+  */
+
+    return convert_metasim_to_R(L);
+  }
 
 
 ///perform survival step on the landscape
@@ -1254,7 +1319,9 @@ SEXP writeGDA(SEXP fn, SEXP Rland, SEXP ni)
     OSTRM.open(CHARACTER_VALUE(fn));
     if (!OSTRM)
       {
+#ifdef DEBUG
 	cerr <<"fn "<<CHARACTER_VALUE(fn)<<endl;
+#endif
 	error ("could not open output file name:");
 	return ScalarInteger(1);
       }
@@ -1271,7 +1338,9 @@ SEXP writeArlequinHap(SEXP fn, SEXP Rland, SEXP ni)
   OSTRM.open(CHARACTER_VALUE(fn));
   if (!OSTRM)
     {
+#ifdef DEBUG
       cerr <<"fn "<<CHARACTER_VALUE(fn)<<endl;
+#endif
       error ("could not open output file name:");
       return ScalarInteger(1);
     }
@@ -1288,7 +1357,9 @@ SEXP writeArlequinDip(SEXP fn, SEXP Rland, SEXP ni)
     OSTRM.open(CHARACTER_VALUE(fn));
     if (!OSTRM)
       {
+#ifdef DEBUG
 	cerr <<"fn "<<CHARACTER_VALUE(fn)<<endl;
+#endif
 	error ("could not open output file name:");
 	return ScalarInteger(1);
       }
@@ -1305,7 +1376,9 @@ SEXP writeBIOSYS(SEXP fn, SEXP Rland, SEXP ni)
     OSTRM.open(CHARACTER_VALUE(fn));
     if (!OSTRM)
       {
+#ifdef DEBUG
 	cerr <<"fn "<<CHARACTER_VALUE(fn)<<endl;
+#endif
 	error ("could not open output file name:");
 	return ScalarInteger(1);
       }
@@ -1322,7 +1395,9 @@ SEXP writeGenPop(SEXP fn, SEXP Rland, SEXP ni)
     OSTRM.open(CHARACTER_VALUE(fn));
     if (!OSTRM)
       {
+#ifdef DEBUG
 	cerr <<"fn "<<CHARACTER_VALUE(fn)<<endl;
+#endif
 	error ("could not open output file name:");
 	return ScalarInteger(1);
       }
@@ -1339,7 +1414,9 @@ SEXP writeReRat(SEXP fn, SEXP Rland, SEXP ni)
     OSTRM.open(CHARACTER_VALUE(fn));
     if (!OSTRM)
       {
+#ifdef DEBUG
 	cerr <<"fn "<<CHARACTER_VALUE(fn)<<endl;
+#endif
 	error ("could not open output file name:");
 	return ScalarInteger(1);
       }
@@ -1356,7 +1433,9 @@ SEXP writeMigrateDip(SEXP fn, SEXP Rland, SEXP ni)
     OSTRM.open(CHARACTER_VALUE(fn));
     if (!OSTRM)
       {
+#ifdef DEBUG
 	cerr <<"fn "<<CHARACTER_VALUE(fn)<<endl;
+#endif
 	error ("could not open output file name:");
 	return ScalarInteger(1);
       }
@@ -1373,7 +1452,9 @@ SEXP writeR(SEXP fn, SEXP Rland, SEXP ni)
     OSTRM.open(CHARACTER_VALUE(fn));
     if (!OSTRM)
       {
+#ifdef DEBUG
 	cerr <<"fn "<<CHARACTER_VALUE(fn)<<endl;
+#endif
 	error ("could not open output file name:");
 	return ScalarInteger(1);
       }

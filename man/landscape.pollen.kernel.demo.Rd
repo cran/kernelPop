@@ -6,7 +6,8 @@
 Produces a plot of a landscape.  Adds a plot of the pollination distances in the landscape.
 }
 \usage{
-landscape.pollen.kernel.demo(s = 0, pmn1 = 30, pshp1 = 1.01, pmn2 = 600, pshp2 = 200, pmix = 0.75, plot = T)
+landscape.pollen.kernel.demo(s = 0, pmn1 = 30, pshp1 = 1.01,
+                             pmn2 = 600, pshp2 = 200, pmix = 0.75, plot = T)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

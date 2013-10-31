@@ -1,11 +1,12 @@
-\name{landscape.simulate}
-\alias{landscape.simulate}
+\name{landscape.simulate.stg0}
+\alias{landscape.simulate.stg0}
 \title{Run a simulation for a single landscape through time}
 
 \description{
-  Simulate a Rmetasim landscape for a number of generations.}
+  Simulate a Rmetasim landscape for a number of generations. Implement
+  carrying capacity starting with the smallest/youngest stage in each population}
 \usage{
-   landscape.simulate(Rland,numit,seed=-1,compress=FALSE)
+   landscape.simulate.stg0(Rland,numit,seed=-1,compress=FALSE)
 }
 \arguments{
   \item{Rland}{the Rmetasim landscape object}

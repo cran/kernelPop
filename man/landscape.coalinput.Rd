@@ -7,8 +7,8 @@
 
 \usage{
   ## must be called AFTER integer, switch, and float params have been created
-  rland <- landscape.coalinput(rland, npp=500, arlseq = "seq.arp", arlms = "ms.arp", seqsitemut=1e-7,
-                               msmut = 5e-4)
+   landscape.coalinput(rland, npp=200, arlseq, arlms, seqsitemut=1e-7,
+                               msmut = 5e-4, mut.rates = NULL)
 }
 \arguments{
   \item{rland}{partially created landscape object, required}
@@ -17,6 +17,7 @@
 \item{arlms}{name of the Arlequin format file containing a single locus of diploid microsatellite data for any number of populations}
   \item{seqsitemut}{mutation rate for sequence data}
   \item{msmut}{mutation rate for diploid genotypic data}
+  \item{mut.rates}{overall mutation rates if seq and ms mut rates not specified}
 }
 
 \details{This function provides part of an interface between R and

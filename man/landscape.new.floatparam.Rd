@@ -6,9 +6,9 @@
   Create a set of floating point parameters for a Rmetasim landscape.}
 \usage{
   ## must be called AFTER landscape.new.empty()
-  rland <- landscape.new.floatparam(rland,s=0, seedscale = c(10,10),
+ landscape.new.floatparam(rland,s=0, seedscale = c(10,10),
   seedshape = c(10,10), seedmix=1, pollenscale=c(2,10),
-  pollenshape=c(2,6), pollenmix=1,asp=1)}
+  pollenshape=c(2,6), pollenmix=1,asp=1, mindens=1e-25)}
 
 \arguments{
   \item{rland}{skeletion of landscape object, required}
@@ -47,6 +47,9 @@
   Weibull/exponential portion.  A value of 0 selects distances only from
   the Gaussian portion.}
 
+\item{asp}{x/y aspect ratio for landscape (default=1)}
+\item{mindens}{minimum density on pollen dispersal kernel that still results
+in pollination}
 }
 \examples{
   ## Defaults

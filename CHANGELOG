@@ -1,6 +1,10 @@
-ver 0.11.1
-1/24/10
-lots of changes both internal and in userspace.
-
 0.9.09 added const to take care of CHARSXP changes in 2.6
 0.9.07 added documentation comparing kernePop to Rmetasim and EASYPOP
+0.12.0 (skipped some changes in intermediate versions, mostly fixing bugs).
+       added a vector of potential males to the system to increase speed.
+       also added a male choice approximation that somewhat increases speed
+       in this version only the male choice approx is implemented.  Will add the
+       implementation of the more exact solution in next minor update.
+0.12.1 fixed bugs in 'landscape.plot.locations()' and supporting function
+0.12.2 numerous changes to pass make check on R3.0
+0.12.3 changed a misspelled word in description

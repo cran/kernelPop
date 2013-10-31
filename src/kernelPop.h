@@ -114,6 +114,10 @@ extern "C" SEXP getListElement(SEXP list, const char *str);
 ///run metasim on the landscape a certain number of times
 extern "C" SEXP iterate_landscape(SEXP numit, SEXP Rland, SEXP cmpress);
  
+///run metasim on the landscape a certain number of times
+///apply carry capacity only on stage 0
+extern "C" SEXP iterate_landscape_stg0(SEXP numit, SEXP Rland, SEXP cmpress);
+ 
 extern "C" SEXP populate_Rland(SEXP Rland, SEXP Population_sizes);
 
 ///utility functions

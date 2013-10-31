@@ -5,10 +5,10 @@
 \description{
   Calculate allele counts}
 \usage{
-  hetmat <- landscape.exp.het(rland,tbl.out=F)
+  landscape.allelecount(Rland,tbl.out=FALSE)
 }
 \arguments{
-  \item{rland}{the Rmetasim landscape object}
+  \item{Rland}{the Rmetasim landscape object}
   \item{tbl.out}{return as a (three-dimensional) table if TRUE.  If
   FALSE, return as a dataframe with categorical variables denoting the
   locus, population and allele.}

@@ -2,10 +2,10 @@
 # In place to read the shared library
 #
 
-.First.lib <- function(libpath, libname)
-  {
-    library.dynam(libname)
-  }
+#.First.lib <- function(libpath, libname)
+#  {
+#    library.dynam(libname)
+#  }
 
 #.onLoad <- function(libname, pkgname)
 #  {

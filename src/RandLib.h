@@ -57,7 +57,19 @@ public:
 
   ///returns a value from a Poisson Distribution with mean equal to mu.
   int poisson(double mu);
-  
+
+  ////the next three functions return random pulls from different pdfs.  
+  //// they are useful for getting a random distance.
+  ///
+  //returns a value from a weibull distribution
+  double rndweibull(double sc, double sh);  
+
+  //returns a value from a geometric distribution
+  double rndgeom(double sc, double sh);  
+
+  //returns a value from a mixed distribution
+  double rndmixed(double mu1, double mu2, double sd1, double sd2, double mix);  
+
   ///Takes a xy coordinate and returns a new xy coordinate derived from 
   ///choosing a direction uniformly and a distance based upon a negative exponential 
   ///distribution 

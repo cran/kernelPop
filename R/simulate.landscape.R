@@ -24,8 +24,26 @@ landscape.coerce <- function(rland)
     rland
   }
 
-"landscape.simulate" <-
-function(Rland, numit, seed=-1, compress=FALSE)
+#this function implements carry capacity only in stage 0 of each habitat
+landscape.simulate.stg0 <- function(Rland, numit, seed=-1, compress=FALSE)
+  {
+    if (is.landscape(Rland))
+      {
+        if (!(seed<0))
+          {
+            set.seed(seed)
+          }
+        Rland <- landscape.coerce(Rland)
+        .Call("iterate_landscape_stg0",as.integer(numit),Rland,as.integer(compress),PACKAGE = "kernelPop")
+      }
+    else
+      {
+        print("Rland not a landscape object...exiting")
+      }
+  }
+
+
+landscape.simulate <- function(Rland, numit, seed=-1, compress=FALSE)
   {
     if (is.landscape(Rland))
       {

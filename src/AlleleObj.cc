@@ -231,8 +231,10 @@ void SeqAllele::Scan(istream & stream)
       stream >> tmp;
       if (alist.find(tmp)==string::npos)
 	{
+#ifdef DEBUG
 	  cerr << "Problem with DNA sequence.  A base other than AGTCagtc read (could signify premature sequence end"<<endl;
 	  cerr << "Problem found at base: "<<i <<endl;
+#endif
 	  assert(0==1);
 	}
 
