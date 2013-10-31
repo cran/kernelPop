@@ -131,7 +131,7 @@ int RandLib::unirange(int maxval)
 int RandLib::uniminmax(int minval, int maxval)
 {
   int rv;
-  rv=int(rround(runif(minval,maxval),0));
+  rv=int(fround(runif(minval,maxval),0));
   return rv;
 }
 
@@ -144,7 +144,7 @@ int RandLib::poisson(double mu)
 {
   int rv;
   //  rv=int(round(rpois(mu)));
-  rv=int(rround(rpois(mu),0));
+  rv=int(fround(rpois(mu),0));
   return rv;
 }
 

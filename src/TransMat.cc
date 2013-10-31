@@ -109,17 +109,18 @@ TransMat & TransMat::operator= (TransMat &T)
 
 
 ///Implementation of the random state algorithm
-void TransMat::SetRandomToStateVec ()
+void TransMat::SetRandomToStateVec (double dens)
 {
   size_t sz = Size();
   double *p = new double[sz + 1];
 
   size_t i;
 
+  if (dens>1){dens=1;}
   for (i=0;i<sz;i++)
     {
       SetToState(i);
-      p[i]=Value();
+      p[i]=Value()*(1-dens);
       assert(p[i]>=0);
     }
   RandLibObj.SetDiscreteLookup(p,sz+1);

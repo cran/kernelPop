@@ -4,7 +4,7 @@
 #PKG_CXXFLAGS = -I. -ggdb  -pedantic -Wall
 #PKG_CFLAGS =   -I. -O3 -pedantic -Wall
 #PKG_CXXFLAGS = -I. -O3  -pedantic -Wall
-PKG_CFLAGS =   -I. 
-PKG_CXXFLAGS = -I. 
+PKG_CFLAGS =   -I.
+PKG_CXXFLAGS = -I.
 
 PKG_LIBS =  ${FLIBS} ${LAPACK_LIBS} ${BLAS_LIBS} ${LIBM} 

@@ -8,7 +8,8 @@
   ## must be called AFTER landscape.new.empty()
  landscape.new.floatparam(rland,s=0, seedscale = c(10,10),
   seedshape = c(10,10), seedmix=1, pollenscale=c(2,10),
-  pollenshape=c(2,6), pollenmix=1,asp=1, mindens=1e-25)}
+  pollenshape=c(2,6), pollenmix=1,asp=1, mindens=1e-25,
+nddmag=0, ndd=1)}
 
 \arguments{
   \item{rland}{skeletion of landscape object, required}
@@ -49,7 +50,11 @@
 
 \item{asp}{x/y aspect ratio for landscape (default=1)}
 \item{mindens}{minimum density on pollen dispersal kernel that still results
-in pollination}
+  in pollination}
+\item{nddmag}{ the intensity of negative density dependence at zero
+  distance from mother}
+
+\item{ndd}{mean of negative exponential decline in NDD}
 }
 \examples{
   ## Defaults

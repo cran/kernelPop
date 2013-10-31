@@ -206,6 +206,11 @@ protected:
   ///minimum density to accept as possible for pollination events
   double mindens;
 
+  /// 1/mean of the negative density dependence curve
+  double ndd;
+  ///strength of negative density dependence
+  double nddmag;
+
   ///mean of seed dispersal curve
   double seed_nmu;
   double seed_nmu2;
@@ -353,6 +358,8 @@ public:
 
   inline void setaspect(double as=0){asp=as;}
   inline void setmindens(double md=0){mindens=md;}
+  inline void setndd(double nd=0){ndd=nd;}
+  inline void setnddmag(double nd=0){nddmag=nd;}
   inline void setself(double slf=0) {self=slf;}
   inline void setmultp(int mp=1) {multiple_paternity=mp;}
   inline void setranddemo(int rd=1) {rdemo=rd;}
@@ -403,6 +410,8 @@ public:
 
   inline double getaspect(){return asp;}
   inline double getmindens(){return mindens;}
+  inline double getndd(){return ndd;}
+  inline double getnddmag(){return nddmag;}
   inline double getself() {return self;}
   inline int getmultp() {return multiple_paternity;}
   inline int getloci() {setloci(); return nloc;}
@@ -661,9 +670,14 @@ int PopSize(int p=-1);
      
    */
 
+  void Survive();
 
+  /*
+    basically the same function as Survive except that seedlings (stg0) have lower 
+    survival based on density of negative exponential distribution (ndd parameter is mean of the dist)
+   */
+  void SurviveNDD(); 
 
-void Survive();
 
 /** 
 

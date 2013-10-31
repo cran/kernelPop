@@ -105,7 +105,7 @@ public:
      Takes the current from state and makes a vector of probs that the state winds up in any of the 
 to states.
    */
-void SetRandomToStateVec();
+void SetRandomToStateVec(double dens=0);
 
   /**
      Takes the current from state and makes a vector of probs that the state winds up in any of the 

@@ -141,10 +141,15 @@ public:
     }
 
   inline void SetFY(double nf)
-    {
-      fy = nf;
-    }
+  {
+    fy = nf;
+  }
 
+  inline double GetSeedDist()
+  {
+    //    cerr <<"x,y "<<x<<", "<<y<<" mx, my "<<mx<<", "<<my<<" dist "<<pow(pow(my-y,2)+pow(mx-x,2),0.5)<<endl;
+    return pow(pow(my-y,2)+pow(mx-x,2),0.5);
+  }
 
   inline  int GetLastRep()
     {

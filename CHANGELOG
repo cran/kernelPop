@@ -1,3 +1,7 @@
+1.0.0  improved the parsing of initial conditions set by simcoal
+       further optimized some code.
+       added a simulation step with carrying capacity only applied to initial stage in each habitat
+       added in the possibility for negative density dependence, where survival of offspring declines closer to mother
 0.9.09 added const to take care of CHARSXP changes in 2.6
 0.9.07 added documentation comparing kernePop to Rmetasim and EASYPOP
 0.12.0 (skipped some changes in intermediate versions, mostly fixing bugs).

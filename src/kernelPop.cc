@@ -66,6 +66,8 @@ extern "C" {
 
     L.setaspect((asReal(getListElement(inlist,ASPECTNAME))));
     L.setmindens((asReal(getListElement(inlist,MINDENSNAME))));
+    L.setnddmag((asReal(getListElement(inlist,NDDMAGNAME))));
+    L.setndd((asReal(getListElement(inlist,NDDNAME))));
   }
 
   void R_to_metasim_expression(SEXP inlist, Landscape_space_statistics &L)
@@ -496,8 +498,8 @@ read in landscapes
 
   SEXP metasim_to_R_float(Landscape_space_statistics &L)
   {  ///allocate the floating point values that describe the landscape to 'Flist'
-    SEXP Flist = PROTECT(allocVector (VECSXP,13));
-    SEXP Flistn = PROTECT(allocVector (STRSXP,13));
+    SEXP Flist = PROTECT(allocVector (VECSXP,15));
+    SEXP Flistn = PROTECT(allocVector (STRSXP,15));
     
     SET_STRING_ELT(Flistn, 0, mkChar(SELFRATENAME)); 
     SET_STRING_ELT(Flistn, 1, mkChar(SEEDMUNAME)); 
@@ -513,6 +515,8 @@ read in landscapes
     SET_STRING_ELT(Flistn, 10, mkChar(POLLENSHAPE2NAME)); 
     SET_STRING_ELT(Flistn, 11, mkChar(POLLENMIXNAME)); 
     SET_STRING_ELT(Flistn, 12, mkChar(MINDENSNAME)); 
+    SET_STRING_ELT(Flistn, 13, mkChar(NDDMAGNAME)); 
+    SET_STRING_ELT(Flistn, 14, mkChar(NDDNAME)); 
 
 
     setAttrib(Flist, R_NamesSymbol, Flistn);
@@ -531,6 +535,8 @@ read in landscapes
     SET_VECTOR_ELT(Flist, 11, ScalarReal(L.getpollen_mix()));
 
     SET_VECTOR_ELT(Flist, 12, ScalarReal(L.getmindens()));
+    SET_VECTOR_ELT(Flist, 13, ScalarReal(L.getnddmag()));
+    SET_VECTOR_ELT(Flist, 14, ScalarReal(L.getndd()));
 
     
     UNPROTECT(2);
@@ -1105,6 +1111,61 @@ SEXP convert_metasim_to_R(Landscape_space_statistics &L)
 	    L.Survive();
 	    //	    L.HabCarry();
 	    L.HabCarry_stg0();
+	    L.LandCarry();
+
+	    L.Reproduce();
+	    L.Advance();
+	  }
+      }
+    
+    if (compress)
+      {
+	L.Survive();
+      }
+    L.LandCarry();
+    L.HabCarry();
+    
+    /*
+  //debug
+  OSTRM.open("test6.dat");
+  if (!OSTRM)
+  {
+  cerr <<"fn "<<"test.dat"<<endl;
+  error ("could not open output file name:");
+  }
+  OSTRM << L;
+  OSTRM.close();
+  //end debug
+  */
+
+    return convert_metasim_to_R(L);
+  }
+
+
+///Random number generation depends upon seed and RNG generator defined in the
+  ///calling R enviroment
+  SEXP iterate_landscape_NDD(SEXP numit, SEXP Rland, SEXP cmpress)
+  {
+    Landscape_space_statistics L;
+    int n,i=0;
+    int compress;
+    
+    convert_R_to_metasim(Rland,L);
+    
+    L.ChooseEpoch();
+    L.ConstructDemoMatrix();
+    
+    n = INTEGER(coerceVector(numit,INTSXP))[0];
+    compress = INTEGER(coerceVector(cmpress,INTSXP))[0];
+    
+    for (i=0;i<n;i++)
+      {
+	if ((L.getgens()>L.getCgen())&&(L.PopSize()!=0))
+	  {
+	    L.Extirpate();
+	    L.SurviveNDD();
+	    L.HabCarry();
+	    //	    L.HabCarry_stg0();
 	    L.LandCarry();
 
 	    L.Reproduce();

@@ -716,6 +716,107 @@ void Landscape_space::Survive()
       RandLibObj.FreeDiscreteLookup();
     }
 }
+
+///Survive step with negative density dependence modeled as a decline in seedling survival
+///that declines as an negative exponential from the maternal plant;  Effect ignores other plants
+void Landscape_space::SurviveNDD()
+{
+  PackedIndividual_space ind,tmpind;
+  vector < int > deadindices, changeindices;
+  vector < int >::iterator inditer;
+  int indx;
+  int rs;
+  size_t i, j, isz, sz;
+  double normalize = 1/RandLibObj.negexp(0,ndd);
+
+  //    cerr << "running SurviveNDD(), nddmag = "<<nddmag<<", ndd = "<<ndd<<", normalize = "<<normalize<<endl;
+  
+  deadindices.reserve(1000);
+  changeindices.reserve(1000);
+  sz = nhab * s;
+  for (i=0;i<sz;i++)
+    {
+      S[e].SetFromState(i); //choose a column in the survival/migration matrix
+      if ((i % s)!=0) {//not seedlings so set transitions probs unrelated to dist
+	S[e].SetRandomToStateVec();
+	//	cerr << "not seedling" << i <<endl;
+      } 
+      I[i].ResetIndividuals();
+      isz = I[i].size();
+      I[i].ResetIndividuals();
+      for (j=0;j<isz;j++)
+	{
+	  ind = I[i].GetCurrentIndividual();
+	  indx = I[i].GetCurrentIndex();
+	  if ((indx<0)||(ind.GetClass()<0))
+	    {
+#ifdef DEBUG
+	      cerr << " run off the the end of the individual map for class " << i<<endl;
+#endif
+	      assert(ind.GetClass()>=0);
+	    }
+
+
+	  if (ind.GetChanged()<t)
+	    {
+	      
+	      if ((i % s)==0) {
+		if (nddmag>0) 
+		  {
+		    //		    cerr<<"is seedling "<<i<<endl;
+		    S[e].SetRandomToStateVec(nddmag*RandLibObj.negexp(ind.GetSeedDist(),ndd));
+		    //		    cerr <<"ind x,y "<<ind.GetX()<<", "<<ind.GetY()<<" mx, my "<<ind.GetMX()<<", "<<ind.GetMY()<<endl;
+		    //		    cerr<<"Dist "<<ind.GetSeedDist()<<" ndd "<<ndd<<" dens "<<RandLibObj.negexp(ind.GetSeedDist(),ndd)<<endl;
+		  } else 
+		  {
+		    S[e].SetRandomToStateVec();
+		  }
+	      }
+
+	      rs = S[e].RandomState();
+	      if (rs<0)//ind dies
+		{
+		  deadindices.push_back(indx);
+		}
+	      else if (rs!=int(i))
+		{
+		  ind.Change(t);
+		  ind.SetClass(rs);
+		  ind.Growth(Atbls);
+		  I[rs].AddIndividual(ind);
+		  changeindices.push_back(indx);
+		}
+	      else
+		{
+		  I[i].ChangeInd(indx,t);
+		}
+	    }
+	  else
+	    {
+	    }
+	  if (I[i].NextIndividual()) //advance the individual pointer
+	    {
+	      break;
+	    }
+	}
+
+      for (inditer=deadindices.begin();inditer!=deadindices.end();inditer++)
+	{
+	  I[i].RemoveInd(*inditer,t,Atbls);
+	}
+      for (inditer=changeindices.begin();inditer!=changeindices.end();inditer++)
+	{
+	  I[i].RemoveInd(*inditer,t,Atbls);
+	}
+
+      deadindices.clear();
+      changeindices.clear();
+      RandLibObj.FreeDiscreteLookup();
+    }
+}
+
+
+
 /** 
 
 
@@ -1035,21 +1136,22 @@ void Landscape_space::Reproduce()
 	  M[e].SetToState(k);
   ///get the individuals in all classes that can contribute male gametes 
   ///and put them in a single vector
-  
-	  for (i=0;i<sz;i++)
-	    { 
-	      M[e].SetFromState(i);
-	      if (M[e].Value()>0)
-		{
-		  tmpmales = I[i].ReturnAsVector();
-		  valid_males.insert(valid_males.end(),tmpmales.begin(),tmpmales.end()); //Trying to add all the males to a single vector here....
+	  if (self<1)  //if selfing is not complete, then make a vector of potential fathers
+	    {
+	      for (i=0;i<sz;i++)
+		{ 
+		  M[e].SetFromState(i);
+		  if (M[e].Value()>0)
+		    {
+		      tmpmales = I[i].ReturnAsVector();
+		      valid_males.insert(valid_males.end(),tmpmales.begin(),tmpmales.end()); //Trying to add all the males to a single vector here....
+		    }
 		}
-	    }
 	  //randomize the males so that we can just truck through them and pick the first one
 	  //that falls in the correct area
 	  //randomly choose a distance from the correct distribution
-	  std::random_shuffle(valid_males.begin(),valid_males.end()); 
-	  
+	      std::random_shuffle(valid_males.begin(),valid_males.end()); 
+	    } //end if self<1
 
 	  I[k].CompressClass(0.5);///save space (may help speed )
 	  I[k].ResetIndividuals();///set an internal pointer to I[k] first ind in list
@@ -1069,8 +1171,10 @@ void Landscape_space::Reproduce()
 	      ///decides where pollen comes from 
 	      males.clear();
 
-	      
-	      males = CalculateMaleGameteClassVectorApproxDist(searchI); //this is the approximate solution (dist method)
+	      if (self<1) //if selfing is guaranteed, then don't waste time finding fathers
+		males = CalculateMaleGameteClassVectorApproxDist(searchI); //this is the approximate solution (dist method)
+	      else
+		males.push_back(searchI);
 
 
 /**
@@ -1361,6 +1465,49 @@ void Landscape_space::HabCarry_stg0(int k)
 	}
     }
 }
+
+/*
+
+void Landscape_space::CarryStateNDD(size_t maxsz, int i)
+{
+  int numdel,k;
+  int sz I[i].size();
+
+
+  if (maxsz<sz)
+    {
+      numdel = (sz-maxsz);
+      for (k=0;k<sz;k++)
+	{
+	  
+	}     
+      for (k=0;k<numdel;k++)
+	{
+	  I[i].RemoveRandomInd(t,Atbls);
+	}
+    }
+}
+
+
+void Landscape_space::HabCarry_stg0_NDD(int k)
+{
+  int h;
+  size_t j, sz, c;
+
+  sz = nhab * s;
+
+  for (j=0;j<sz;j++)
+    {
+      if ((j % s)==0)
+	{
+	  h = Habitat(j);
+	  c = kvec[e][h] - (PopSize(h)-I[j].size());
+	  if (c<0) {c=0;}
+	  CarryStateNDD(c,j);
+	}
+    }
+}
+*/
 
 void Landscape_space::LandCarry()
 {
