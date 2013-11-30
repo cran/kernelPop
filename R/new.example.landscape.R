@@ -57,9 +57,9 @@ function()
   rland <- landscape.new.locus(rland,type=2,ploidy=2,mutationrate=0.007,transmission=0,numalleles=6,allelesize=75)
 
 
-  expmat <- cbind(c(0,0.3,0.3,0.4,0,0,0),c(0,0.7,0.25,0.05,0,0,0))
-  hsq <- c(0.9,0.9)
-  rland <- landscape.new.expression(rland,expmat=expmat,hsq=hsq)
+#  expmat <- cbind(c(0,0.3,0.3,0.4,0,0,0),c(0,0.7,0.25,0.05,0,0,0))
+#  hsq <- c(0.9,0.9)
+#  rland <- landscape.new.expression(rland,expmat=expmat,hsq=hsq)
 
   initpopsize <- 150
   rland <- landscape.new.individuals(rland,round(runif(2*rland$intparam$habitat,min=0,max=initpopsize/1.5)))

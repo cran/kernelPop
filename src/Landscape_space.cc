@@ -916,7 +916,6 @@ vector< PackedIndividual_space >  Landscape_space::CalculateMaleGameteClassVecto
 }
 
 
-
 /** 
 
 
@@ -1172,11 +1171,10 @@ void Landscape_space::Reproduce()
 	      males.clear();
 
 	      if (self<1) //if selfing is guaranteed, then don't waste time finding fathers
-		males = CalculateMaleGameteClassVectorApproxDist(searchI); //this is the approximate solution (dist method)
+		//		males = CalculateMaleGameteClassVectorApproxDist(searchI); //this is the approximate solution (dist method)
+		males = CalculateMaleGameteClassVector(searchI); //this is the more exact solution
 	      else
 		males.push_back(searchI);
-
-
 /**
 
 Iterate through the possible new classes of offspring.  By this I mean

@@ -1,5 +1,5 @@
-a95c5ced30907f9b2de1da4725101f45 *CHANGELOG
-e35ac3994c479135b74ff61324bebea2 *DESCRIPTION
+ed8af4754c2a6b70ffe81ca6d26b0699 *CHANGELOG
+0b8b3473486d45a9f0659efdcf3b7e0b *DESCRIPTION
 8d4a72867ccb91be312d3ca721966237 *NAMESPACE
 562c74df5ca5c69f3308f5868e2afc7a *R/FWright.landscape.R
 0ecf4792f0ac266a28339c8e76885341 *R/Fst.landscape.R
@@ -33,7 +33,7 @@ b665a22396d06af43d7bb774d03327b4 *R/locus.R
 1e6e0164edc5a792634a191c28536b0d *R/mismatchdist.R
 6c9d398c46e28b5ad744beb6aa4c89ce *R/mixed-dist-prob-functions.R
 3d884e622b2682999b9baadfcc9672f6 *R/new.epoch.R
-8ce8efe06cacef6bd497b5329283050f *R/new.example.landscape.R
+cfef10efffcc2c7c6e473013aa868c50 *R/new.example.landscape.R
 a3924def5e4d6080c5047da030e8e7f1 *R/new.expression.R
 87a812c33091ce475491f83751ba76ed *R/new.floatparam.R
 f9e309fd84b58098a766c6baefa3f870 *R/new.individuals.R
@@ -126,12 +126,12 @@ fb86989b6b089f2d1d24aa32f624d30f *src/FastSeqAllele.cc
 f0b6c03f050d31c72c1943652adc5fbc *src/FastSeqAllele.h
 ffe733b5d8acb1b4a6cca7d2c1f5af79 *src/Genotype.cc
 6c40b4b8061304ca9540107329909967 *src/Genotype.h
-914cdf5fb1b429d188ac977e5ece6bcc *src/Landscape_space.cc
-a3a019caa3b77bb419f0a2b1b73968de *src/Landscape_space.h
+4ce8be1abdc0aab11ba0d1269a51c997 *src/Landscape_space.cc
+1dcab6e6fa450afc40d4cfaf33fa8cfd *src/Landscape_space.h
 9ebe97f18375244ef38ef1130066781f *src/Makevars
 8ad780ce51363da6e8a9bbe5fb99d2f3 *src/PackedIndividual_space.cc
 e2365b29c0651eac373afd0e96d50921 *src/PackedIndividual_space.h
-0ff27408e4a2af1d716943f7048bde8c *src/RandLib.cc
+4c2afbdf4f9918c7cb23c58576968d32 *src/RandLib.cc
 f2beccd5c048c4568426d76c56271bdf *src/RandLib.h
 30a36f94770d72b43414b4084f567b66 *src/SiteObj.cc
 840fdcee1cebbe3c132a7c47f1b09ce6 *src/SiteObj.h

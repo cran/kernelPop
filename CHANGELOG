@@ -1,3 +1,5 @@
+1.0.2  fixed an issue with selecting males when multiple paternity is happening (probably slows things down, though its accurate)
+1.0.1  changed mapping of rround() to fround() in src
 1.0.0  improved the parsing of initial conditions set by simcoal
        further optimized some code.
        added a simulation step with carrying capacity only applied to initial stage in each habitat

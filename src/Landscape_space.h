@@ -693,6 +693,7 @@ int PopSize(int p=-1);
 */
 vector < PackedIndividual_space > CalculateMaleGameteClassVector(PackedIndividual_space pi);
 
+
 /** 
 
 This function approximates the solution implemented in
